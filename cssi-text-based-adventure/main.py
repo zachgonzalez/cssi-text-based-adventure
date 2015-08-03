@@ -17,14 +17,27 @@
 import webapp2
 import jinja2
 import os
-
+from google.appengine.ext import ndb
 JINJA_ENVIRONMENT = jinja2.Environment(
     loader=jinja2.FileSystemLoader(os.path.dirname(__file__)),
     extensions=['jinja2.ext.autoescape'],
     autoescape=True)
-#
-# user_direction= "North"
 
+class Events(ndb.Model):
+    encounter = ndb.StringProperty()
+    outcome = ndb.StringProperty()
+
+class Directional_events(ndb.Model):
+    encounter = ndb.StringProperty()
+    directional_limitation = ndb.StringProperty()
+
+event_1 = Events(encounter = "Your bag caught on fire. Oops.", outcome = "All of your supplies are destroyed.")
+event_2 = Events(encounter = "You saw a bus", outcome = "You know what a bus looks like")
+event_3 = Events(encounter = "You see your brither get shot.", outcome = "You're sad.")
+event_4 = Events(encounter = "You find a penny.", outcome = "Gain 1 cent.")
+
+directional_event_1 = Directional_events(encounter = "A tree falls down!", directional_limitation= "You can only go North.")
+# event_list = [event_1, event_2]
 
 
 class MainHandler(webapp2.RequestHandler):
