@@ -15,11 +15,30 @@
 # limitations under the License.
 #
 import webapp2
+import jinja2
+import os
+
+JINJA_ENVIRONMENT = jinja2.Environment(
+    loader=jinja2.FileSystemLoader(os.path.dirname(__file__)),
+    extensions=['jinja2.ext.autoescape'],
+    autoescape=True)
+
+user_input_loc= "North"
 
 class MainHandler(webapp2.RequestHandler):
     def get(self):
-        self.response.write('Hello world!')
+        self.response.out.write("Welcome to our game! Click here to play!")
+
+class GameHandler(webapp2.RequestHandler):
+    def get(self):
+        template = JINJA_ENVIRONMENT.get_template('templates/index.html')
+        self.response.out.write(template.render())
+    def post(self):
+        template = JINJA_ENVIRONMENT.get_template('templates/index.html')
+        self.response.out.write(template.render(user_input_loc))
+        # self.response.out.write("You went: " + user_input_loc)
 
 app = webapp2.WSGIApplication([
-    ('/', MainHandler)
+    ('/', MainHandler),
+    ('/game', GameHandler)
 ], debug=True)
