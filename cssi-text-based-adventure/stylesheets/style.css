@@ -1,0 +1,20 @@
+#direction {
+  text-transform: uppercase;
+}
+
+html {
+  color: #FF00FF;
+  background-color: black;
+  align-content: center;
+  text-align: center;
+  margin: 0%;
+}
+form {
+  background-color: beige;
+  border: 5000px;
+  border-style: inset;
+  border-color: yellow;
+  border-width: thick;
+  object-position: center;
+  position: static;
+}
