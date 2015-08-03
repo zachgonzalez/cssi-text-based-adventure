@@ -6,15 +6,11 @@
   <body>
     <div>
     <form method="post" action="">
-    <select>
-      <option value="North">North</option>
-      <option value="South">South</option>
-      <option value="East">East</option>
-      <option value="West">West</option>
-      <input type="button" value="Submit"></input>
+      <input type="text" name="user_direction"></input>
+      <input type="submit" value="Take me this way"></input>
     </form>
   </div>
 
-  <p> You went {{user_input_loc}}</p>
+  <p> You went {{direction.capitalize()}}</p>
   </body>
 </html>

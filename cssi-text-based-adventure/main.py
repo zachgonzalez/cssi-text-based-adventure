@@ -22,8 +22,10 @@ JINJA_ENVIRONMENT = jinja2.Environment(
     loader=jinja2.FileSystemLoader(os.path.dirname(__file__)),
     extensions=['jinja2.ext.autoescape'],
     autoescape=True)
+#
+# user_direction= "North"
 
-user_input_loc= "North"
+
 
 class MainHandler(webapp2.RequestHandler):
     def get(self):
@@ -34,9 +36,15 @@ class GameHandler(webapp2.RequestHandler):
         template = JINJA_ENVIRONMENT.get_template('templates/index.html')
         self.response.out.write(template.render())
     def post(self):
-        template = JINJA_ENVIRONMENT.get_template('templates/index.html')
-        self.response.out.write(template.render(user_input_loc))
-        # self.response.out.write("You went: " + user_input_loc)
+        user_direction = self.request.get('user_direction')
+        user_direction_template_vars = {"direction": user_direction}
+        if user_direction.lower() == 'north' or user_direction.lower() == 'south' or user_direction.lower() == 'east' or user_direction.lower() == 'west':
+
+            template = JINJA_ENVIRONMENT.get_template('templates/index.html')
+            self.response.out.write(template.render(user_direction_template_vars))
+            # self.response.out.write("You went: " + user_input_loc)
+        else:
+            self.response.out.write("Please enter a valid command")
 
 app = webapp2.WSGIApplication([
     ('/', MainHandler),
