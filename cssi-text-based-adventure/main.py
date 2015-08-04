@@ -68,16 +68,16 @@ ending_events = [event_4, event_5]
 directional_events = [event_12]
 
 class MainHandler(webapp2.RequestHandler):
-    def get(self):
-        login_template = JINJA_ENVIRONMENT.get_template('templates/login.html')
+      def get(self):
         user = users.get_current_user()
-        welcome = { "greeting": "Hey welcome to the game of life.", "state_user":"Your username is: ","user": user}
         if user:
-            self.response.write(login_template.render(welcome))
-            user = UserModel(currentUser=user.user_id(), text="HEYO")
-            user.put()
+            greeting = ('Welcome, %s! (<a href="%s">Sign out</a>)' %
+                        (user.nickname(), users.create_logout_url('/')))
         else:
-            self.redirect(users.create_login_url(self.request.uri))
+            greeting = ('<a href="%s">Sign in or register</a>.' %
+                        users.create_login_url('/'))
+
+        self.response.out.write('<html><body>%s</body></html>' % greeting)
 
 
 class GameHandler(webapp2.RequestHandler):
