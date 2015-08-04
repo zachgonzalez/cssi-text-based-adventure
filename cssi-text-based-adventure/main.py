@@ -47,10 +47,11 @@ directional_event_1 = Directional_events(encounter = "A tree falls down!", direc
 
 class MainHandler(webapp2.RequestHandler):
     def get(self):
-        self.response.out.write("Welcome to our game ")
+        login_template = JINJA_ENVIRONMENT.get_template('templates/login.html')
         user = users.get_current_user()
+        welcome = { "greeting": "Hey welcome to the game of life.", "state_user":"Your username is: ","user": user}
         if user:
-            self.response.write(user)
+            self.response.write(login_template.render(welcome))
             user = UserModel(currentUser=user.user_id(), text="HEYO")
             user.put()
         else:
