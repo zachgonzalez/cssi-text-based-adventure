@@ -18,10 +18,15 @@ import webapp2
 import jinja2
 import os
 from google.appengine.ext import ndb
+from google.appengine.api import users
 JINJA_ENVIRONMENT = jinja2.Environment(
     loader=jinja2.FileSystemLoader(os.path.dirname(__file__)),
     extensions=['jinja2.ext.autoescape'],
     autoescape=True)
+
+class UserModel(ndb.Model):
+    currentUser = ndb.StringProperty(required= True)
+    text = ndb.TextProperty()
 
 class Events(ndb.Model):
     encounter = ndb.StringProperty()
@@ -42,7 +47,15 @@ directional_event_1 = Directional_events(encounter = "A tree falls down!", direc
 
 class MainHandler(webapp2.RequestHandler):
     def get(self):
-        self.response.out.write("Welcome to our game! Click here to play!")
+        self.response.out.write("Welcome to our game ")
+        user = users.get_current_user()
+        if user:
+            self.response.write(user)
+            user = UserModel(currentUser=user.user_id(), text="HEYO")
+            user.put()
+        else:
+            self.redirect(users.create_login_url(self.request.uri))
+
 
 class GameHandler(webapp2.RequestHandler):
     def get(self):
