@@ -45,8 +45,10 @@ class Events(ndb.Model):
 
 
 event_1 = Events(encounter = "Your bag caught on fire. Oops.", outcome = "All of your supplies are destroyed.")
-event_2 = Events(encounter = "You saw a bus", outcome = "You know what a bus looks like")
-event_3 = Events(encounter = "You see your brither get shot.", outcome = "You are sad.")
+
+event_2 = Events(encounter = "You saw a bus.", outcome = "CONGRATULATIONS!! You know what a bus looks like")
+event_3 = Events(encounter = "You see your brother get shot.", outcome = "You're sad.")
+
 event_4 = Events(encounter = "You find a penny.", outcome = "Gain 1 cent.")
 event_5 = Events(encounter = "The cops found and surrounded you.", outcome = "GAME OVER")
 
@@ -97,7 +99,7 @@ class GameHandler(webapp2.RequestHandler):
         else:
             i = random.randint(0,(len(event_list)-1))
             user_direction = self.request.get('user_direction')
-            story1 = "This is what happens when they go " + user_direction.lower() + ":"
+            story1 = "This is what happens when you go " + user_direction.lower() + ":"
 
             if event_list[i] == event_13:
                 user_direction_template_vars = {"direction": user_direction, "story_text": story1, "event_encounter": event_list[i].encounter, "event_outcome": event_list[i].outcome }
@@ -117,7 +119,13 @@ class GameHandler(webapp2.RequestHandler):
                 # self.response.out.write("You went: " + user_input_loc)
 
 
+class DeathHandler(webapp2.RequestHandler):
+    def get(self):
+        template = JINJA_ENVIRONMENT.get_template('templates/death.html')
+        self.response.out.write(template.render())
+
 app = webapp2.WSGIApplication([
     ('/', MainHandler),
-    ('/game', GameHandler)
+    ('/game', GameHandler),
+    ('/death', DeathHandler)
 ], debug=True)
