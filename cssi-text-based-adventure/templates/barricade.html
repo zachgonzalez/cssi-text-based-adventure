@@ -8,15 +8,19 @@
     <h1>Welcome to the game of life.</h1>
     <p></p>
     <div><center>
-    <form method="post" action="" style="width: 500px">{{story_text}} {{event_encounter}} {{event_outcome}}
+    <form method="post" action="" style="width: 500px" required>{{story_text}} {{event_encounter}} {{event_outcome}}
     <br>
-      <span id="picofstart"><img src="http://i.huffpost.com/gen/1941141/images/o-CHICAGO-SHOOTING-facebook.jpg" height="400px" width=90%></img></span>
+      <span id="picofstart"><img src="https://geistesstreich.files.wordpress.com/2010/12/polizeisperre-neu.jpg" height="400px" width=90%></img></span>
       <center>What would you like to do?<br>
-      <input type="radio" name="user_direction" value="North"><br>
-      <input type="radio" name="user_direction" value="South"><br>
-      <input type="radio" name="user_direction" value="East"><br>
-      <input type="radio" name="user_direction" value="West"><br>
-      <input type="submit" value="Do this!"></input>
+
+
+      <input type="radio" name="user_direction" value="run" required="">Run away.<br>
+      <input type="radio" name="user_direction" value="shoot" required>Shoot at the police. Go out with a bang.<br>
+      <input type="radio" name="user_direction" value="surrender" required>Surrender.<br>
+      <input type="radio" name="user_direction" value="hide" required>Hide in a nearby dumpster.<br>
+      <input type="submit" value="Do this."></input>
+
+
     </center></form>
   </div>
 

@@ -14,6 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+
 import webapp2
 import jinja2
 import os
@@ -44,8 +45,10 @@ class Events(ndb.Model):
 
 
 event_1 = Events(encounter = "Your bag caught on fire. Oops.", outcome = "All of your supplies are destroyed.")
-event_2 = Events(encounter = "You saw a bus", outcome = "You know what a bus looks like")
-event_3 = Events(encounter = "You see your brither get shot.", outcome = "You're sad.")
+
+event_2 = Events(encounter = "You saw a bus.", outcome = "CONGRATULATIONS!! You know what a bus looks like")
+event_3 = Events(encounter = "You see your brother get shot.", outcome = "You're sad.")
+
 event_4 = Events(encounter = "You find a penny.", outcome = "Gain 1 cent.")
 event_5 = Events(encounter = "The cops found and surrounded you.", outcome = "GAME OVER")
 
@@ -65,16 +68,16 @@ ending_events = [event_4, event_5]
 directional_events = [event_12]
 
 class MainHandler(webapp2.RequestHandler):
-    def get(self):
-        login_template = JINJA_ENVIRONMENT.get_template('templates/login.html')
+      def get(self):
         user = users.get_current_user()
-        welcome = { "greeting": "Hey welcome to the game of life.", "state_user":"Your username is: ","user": user}
         if user:
-            self.response.write(login_template.render(welcome))
-            user = UserModel(currentUser=user.user_id(), text="HEYO")
-            user.put()
+            greeting = ('Welcome, %s! (<a href="%s">Sign out</a>)' %
+                        (user.nickname(), users.create_logout_url('/')))
         else:
-            self.redirect(users.create_login_url(self.request.uri))
+            greeting = ('<a href="%s">Sign in or register</a>.' %
+                        users.create_login_url('/'))
+
+        self.response.out.write('<html><body>%s</body></html>' % greeting)
 
 
 class GameHandler(webapp2.RequestHandler):
@@ -96,7 +99,7 @@ class GameHandler(webapp2.RequestHandler):
         else:
             i = random.randint(0,(len(event_list)-1))
             user_direction = self.request.get('user_direction')
-            story1 = "This is what happens when they go " + user_direction.lower() + ":"
+            story1 = "This is what happens when you go " + user_direction.lower() + ":"
 
             if event_list[i] == event_13:
                 user_direction_template_vars = {"direction": user_direction, "story_text": story1, "event_encounter": event_list[i].encounter, "event_outcome": event_list[i].outcome }
@@ -129,8 +132,14 @@ class GameHandler(webapp2.RequestHandler):
 #             self.response.out.write(template.render(user_direction_template_vars))
 
 
+class DeathHandler(webapp2.RequestHandler):
+    def get(self):
+        template = JINJA_ENVIRONMENT.get_template('templates/death.html')
+        self.response.out.write(template.render())
+
 app = webapp2.WSGIApplication([
     ('/', MainHandler),
     ('/game', GameHandler),
     # ('/barricade-results', BarricadeHandler)
+    ('/death', DeathHandler)
 ], debug=True)
