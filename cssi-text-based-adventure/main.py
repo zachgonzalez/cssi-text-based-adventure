@@ -45,7 +45,7 @@ class Events(ndb.Model):
 
 
 event_1 = Events(encounter = "Your bag caught on fire. Oops.", outcome = "All of your supplies are destroyed.")
-<<<<<<< HEAD
+
 event_2 = Events(encounter = "You saw a bus.", outcome = "CONGRATULATIONS!! You know what a bus looks like")
 event_3 = Events(encounter = "You see your brother get shot.", outcome = "You're sad.")
 
