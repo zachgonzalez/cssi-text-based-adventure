@@ -40,7 +40,7 @@ class GameHandler(webapp2.RequestHandler):
 
     def post(self):
         user_direction = self.request.get('user_direction')
-        story1 = "This is what happens when they go north..."
+        story1 = "This is what happens when they go " + user_direction.lower() + ":"
         user_direction_template_vars = {"direction": user_direction, "story_text": story1}
         if user_direction.lower() == 'north' or user_direction.lower() == 'south' or user_direction.lower() == 'east' or user_direction.lower() == 'west':
 
