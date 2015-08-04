@@ -68,21 +68,21 @@ ending_events = [event_4, event_5]
 directional_events = [event_12]
 
 class MainHandler(webapp2.RequestHandler):
-    def get(self):
-        login_template = JINJA_ENVIRONMENT.get_template('templates/login.html')
+      def get(self):
         user = users.get_current_user()
-        welcome = { "greeting": "Hey welcome to the game of life.", "state_user":"Your username is: ","user": user}
         if user:
-            self.response.write(login_template.render(welcome))
-            user = UserModel(currentUser=user.user_id(), text="HEYO")
-            user.put()
+            greeting = ('Welcome, %s! (<a href="%s">Sign out</a>)' %
+                        (user.nickname(), users.create_logout_url('/')))
         else:
-            self.redirect(users.create_login_url(self.request.uri))
+            greeting = ('<a href="%s">Sign in or register</a>.' %
+                        users.create_login_url('/'))
+
+        self.response.out.write('<html><body>%s</body></html>' % greeting)
 
 
 class GameHandler(webapp2.RequestHandler):
     def get(self):
-        start_text = "Your identical twin has set you up. He told you to meet him downtown at the Board of Trade building, and when you arrive you realize that he has robbed the commissioners and is using you as a doppelganger. You don't realize this until you see the news in a store window nearby announcing the breaking news. Miraculously, you realize that you haven't been caught yet because the police think that the twin is still in the building and that he is wearing all black, but you are about a block away and wearing pastel colors. You have to get away from the scene quickly or you will have to pay a pretty bad price. Without a second thought, you decide you should run somewhere. To the north is Madison Street, to the west is a deserted alley, to the east is Wacker Drive, and to the south is Monroe Street."
+        start_text = "Your identical twin has set you up. He told you to meet him downtown at the Board of Trade building, and as you are arriving you realize that he has robbed the commissioners and is using you as a doppelganger. You don't realize this until you see the news in a store window nearby announcing the breaking news. Miraculously, you realize that you haven't been caught yet because the police think that the twin is still in the building and that he is wearing all black, but you are about a block away and wearing pastel colors. You have to get away from the scene quickly or you will have to pay a pretty bad price. Without a second thought, you decide you should run somewhere. To the north is Madison Street, to the west is a deserted alley, to the east is Wacker Drive, and to the south is Monroe Street."
         beginning = {"story_text": start_text}
         template = JINJA_ENVIRONMENT.get_template('templates/index.html')
         self.response.out.write(template.render(beginning))
@@ -118,6 +118,19 @@ class GameHandler(webapp2.RequestHandler):
                 self.response.out.write(template.render(user_direction_template_vars))
                 # self.response.out.write("You went: " + user_input_loc)
 
+# class BarricadeHandler(webapp2.RequestHandler):
+#     def get(self):
+#
+#     def post(self):
+#         if len(event_list) == 0:
+#             i = random.randint(0,(len(ending_events)-1))
+#
+#             user_direction = self.request.get('user_direction')
+#             story1 = "This is what happens when you go " + user_direction.lower() + ":"
+#             user_direction_template_vars = {"direction": user_direction, "story_text": story1, "event_encounter": ending_events[i].encounter, "event_outcome": ending_events[i].outcome }
+#             template = JINJA_ENVIRONMENT.get_template('templates/index.html')
+#             self.response.out.write(template.render(user_direction_template_vars))
+
 
 class DeathHandler(webapp2.RequestHandler):
     def get(self):
@@ -127,5 +140,6 @@ class DeathHandler(webapp2.RequestHandler):
 app = webapp2.WSGIApplication([
     ('/', MainHandler),
     ('/game', GameHandler),
+    # ('/barricade-results', BarricadeHandler)
     ('/death', DeathHandler)
 ], debug=True)
