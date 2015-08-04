@@ -18,10 +18,16 @@ import webapp2
 import jinja2
 import os
 from google.appengine.ext import ndb
+
+import random
 JINJA_ENVIRONMENT = jinja2.Environment(
     loader=jinja2.FileSystemLoader(os.path.dirname(__file__)),
     extensions=['jinja2.ext.autoescape'],
     autoescape=True)
+
+
+
+
 
 class Events(ndb.Model):
     encounter = ndb.StringProperty()
@@ -37,7 +43,7 @@ event_3 = Events(encounter = "You see your brither get shot.", outcome = "You're
 event_4 = Events(encounter = "You find a penny.", outcome = "Gain 1 cent.")
 
 directional_event_1 = Directional_events(encounter = "A tree falls down!", directional_limitation= "You can only go North.")
-# event_list = [event_1, event_2]
+event_list = [event_1, event_2]
 
 
 class MainHandler(webapp2.RequestHandler):
@@ -52,9 +58,12 @@ class GameHandler(webapp2.RequestHandler):
         self.response.out.write(template.render(beginning))
 
     def post(self):
+        i = random.randint(0,1)
         user_direction = self.request.get('user_direction')
         story1 = "This is what happens when they go " + user_direction.lower() + ":"
-        user_direction_template_vars = {"direction": user_direction, "story_text": story1}
+        user_direction_template_vars = {"direction": user_direction, "story_text": story1, "event_encounter": event_list[i].encounter, "event_outcome": event_list[i].outcome }
+
+
         if user_direction.lower() == 'north' or user_direction.lower() == 'south' or user_direction.lower() == 'east' or user_direction.lower() == 'west':
 
             template = JINJA_ENVIRONMENT.get_template('templates/index.html')
