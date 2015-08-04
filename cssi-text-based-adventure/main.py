@@ -49,10 +49,11 @@ event_1 = Events(encounter = "Your bag caught on fire. Oops.", outcome = "All of
 event_2 = Events(encounter = "You saw a bus", outcome = "You know what a bus looks like")
 event_3 = Events(encounter = "You see your brither get shot.", outcome = "You're sad.")
 event_4 = Events(encounter = "You find a penny.", outcome = "Gain 1 cent.")
+event_5 = Events(encounter = "The cops found and surrounded you.", outcome = "GAME OVER")
 
 directional_event_1 = Directional_events(encounter = "A tree falls down!", directional_limitation= "You can only go North.")
-event_list = [event_1, event_2]
-
+event_list = [event_1, event_2, event_3]
+ending_events = [event_4, event_5]
 
 class MainHandler(webapp2.RequestHandler):
     def get(self):
@@ -74,10 +75,21 @@ class GameHandler(webapp2.RequestHandler):
         self.response.out.write(template.render(beginning))
 
     def post(self):
-        i = random.randint(0,1)
-        user_direction = self.request.get('user_direction')
-        story1 = "This is what happens when they go " + user_direction.lower() + ":"
-        user_direction_template_vars = {"direction": user_direction, "story_text": story1, "event_encounter": event_list[i].encounter, "event_outcome": event_list[i].outcome }
+        if len(event_list) == 0:
+            i = random.randint(0,(len(ending_events)-1))
+            user_direction = self.request.get('user_direction')
+            story1 = "This is what happens when they go " + user_direction.lower() + ":"
+            user_direction_template_vars = {"direction": user_direction, "story_text": story1, "event_encounter": ending_events[i].encounter, "event_outcome": ending_events[i].outcome }
+        else:
+
+            i = random.randint(0,(len(event_list)-1))
+            user_direction = self.request.get('user_direction')
+            story1 = "This is what happens when they go " + user_direction.lower() + ":"
+            user_direction_template_vars = {"direction": user_direction, "story_text": story1, "event_encounter": event_list[i].encounter, "event_outcome": event_list[i].outcome }
+            event_list.remove(event_list[i])
+
+
+
 
 
         if user_direction.lower() == 'north' or user_direction.lower() == 'south' or user_direction.lower() == 'east' or user_direction.lower() == 'west':
