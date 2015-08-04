@@ -49,14 +49,15 @@ event_2 = Events(encounter = "You saw a bus", outcome = "You know what a bus loo
 event_3 = Events(encounter = "You see your brither get shot.", outcome = "You are sad.")
 event_4 = Events(encounter = "You find a penny.", outcome = "Gain 1 cent.")
 event_5 = Events(encounter = "The cops found and surrounded you.", outcome = "GAME OVER")
-event_6 = Events(encounter = "You found a cute kitty", outcome = "You realize you are allergic")
+event_6 = Events(encounter = "You found a cute kitty!", outcome = "You realize you are allergic.")
 event_7 = Events(encounter = "You find a cat!", outcome = "Now you look like the Joker. Congrats..")
 event_8 = Events(encounter = "You run into your old friend Riccardo!", outcome = "Lose twenty dollars.")
-event_9 = Events(encounter = "Hey look, it is Manny He has got a riddle for you", outcome = "Too bad you SUCK at riddles.")
+event_9 = Events(encounter = "Hey look, it is Manny! He has got a riddle for you.", outcome = "Too bad you SUCK at riddles.")
+>>>>>>> e62d0a169b60ed6390c9f817efa13e3f6a540420
 event_10 = Events(encounter = "You find a ping pong paddle. ", outcome = "The air reeks of Liam...")
 event_11 = Events(encounter = "You see your brother on the run from the police! ", outcome = "You immediately run the opposite direction in fear of being mistaken for him")
 event_12 = Events(encounter = "A tree falls down!", outcome= "You can only go North.")
-event_list = [event_1, event_2, event_3]
+event_list = [event_1, event_2, event_3, event_9]
 ending_events = [event_4, event_5]
 directional_events = [event_12]
 
@@ -83,28 +84,28 @@ class GameHandler(webapp2.RequestHandler):
     def post(self):
         if len(event_list) == 0:
             i = random.randint(0,(len(ending_events)-1))
+
             user_direction = self.request.get('user_direction')
             story1 = "This is what happens when you go " + user_direction.lower() + ":"
             user_direction_template_vars = {"direction": user_direction, "story_text": story1, "event_encounter": ending_events[i].encounter, "event_outcome": ending_events[i].outcome }
+            template = JINJA_ENVIRONMENT.get_template('templates/index.html')
+            self.response.out.write(template.render(user_direction_template_vars))
         else:
 
             i = random.randint(0,(len(event_list)-1))
             user_direction = self.request.get('user_direction')
             story1 = "This is what happens when they go " + user_direction.lower() + ":"
-            user_direction_template_vars = {"direction": user_direction, "story_text": story1, "event_encounter": event_list[i].encounter, "event_outcome": event_list[i].outcome }
-            event_list.remove(event_list[i])
+            if event_list[i]==event_9:
+                user_direction_template_vars= {"direction": user_direction, "story_text": story1, "event_encounter": event_list[i].encounter, "event_outcome": event_list[i].outcome }
+                template = JINJA_ENVIRONMENT.get_template('templates/barricade.html')
+                self.response.out.write(template.render(user_direction_template_vars))
+            else:
+                user_direction_template_vars = {"direction": user_direction, "story_text": story1, "event_encounter": event_list[i].encounter, "event_outcome": event_list[i].outcome }
+                event_list.remove(event_list[i])
+                template = JINJA_ENVIRONMENT.get_template('templates/index.html')
+                self.response.out.write(template.render(user_direction_template_vars))
+                # self.response.out.write("You went: " + user_input_loc)
 
-
-
-
-
-        if user_direction.lower() == 'north' or user_direction.lower() == 'south' or user_direction.lower() == 'east' or user_direction.lower() == 'west':
-
-            template = JINJA_ENVIRONMENT.get_template('templates/index.html')
-            self.response.out.write(template.render(user_direction_template_vars))
-            # self.response.out.write("You went: " + user_input_loc)
-        else:
-            self.response.out.write("Please enter a valid command")
 
 app = webapp2.WSGIApplication([
     ('/', MainHandler),
