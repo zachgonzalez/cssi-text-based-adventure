@@ -41,19 +41,23 @@ class Events(ndb.Model):
     encounter = ndb.StringProperty()
     outcome = ndb.StringProperty()
 
-class Directional_events(ndb.Model):
-    encounter = ndb.StringProperty()
-    directional_limitation = ndb.StringProperty()
+
 
 event_1 = Events(encounter = "Your bag caught on fire. Oops.", outcome = "All of your supplies are destroyed.")
 event_2 = Events(encounter = "You saw a bus", outcome = "You know what a bus looks like")
 event_3 = Events(encounter = "You see your brither get shot.", outcome = "You're sad.")
 event_4 = Events(encounter = "You find a penny.", outcome = "Gain 1 cent.")
 event_5 = Events(encounter = "The cops found and surrounded you.", outcome = "GAME OVER")
-
-directional_event_1 = Directional_events(encounter = "A tree falls down!", directional_limitation= "You can only go North.")
+event_6 = Events(encounter = "You found a cute kitty!", outcome = "You realize you’re allergic… *ACHOOO!*")
+event_7 = Events(encounter = "You find a cat!", outcome = "Now you look like the Joker. Congrats..")
+event_8 = Events(encounter = "You run into your old friend Riccardo!", outcome = "Lose twenty dollars.")
+event_9 = Events(encounter = "Hey look, it’s Manny! He’s got a riddle for you.", outcome = "Too bad you SUCK at riddles.")
+event_10 = Events(encounter = "You find a ping pong paddle. ", outcome = "The air reeks of Liam...")
+event_11 = Events(encounter = "You see your brother on the run from the police! ", outcome = "You immediately run the opposite direction in fear of being mistaken for him")
+event_12 = Events(encounter = "A tree falls down!", outcome= "You can only go North.")
 event_list = [event_1, event_2, event_3]
 ending_events = [event_4, event_5]
+directional_events = [event_12]
 
 class MainHandler(webapp2.RequestHandler):
     def get(self):
@@ -79,7 +83,7 @@ class GameHandler(webapp2.RequestHandler):
         if len(event_list) == 0:
             i = random.randint(0,(len(ending_events)-1))
             user_direction = self.request.get('user_direction')
-            story1 = "This is what happens when they go " + user_direction.lower() + ":"
+            story1 = "This is what happens when you go " + user_direction.lower() + ":"
             user_direction_template_vars = {"direction": user_direction, "story_text": story1, "event_encounter": ending_events[i].encounter, "event_outcome": ending_events[i].outcome }
         else:
 
