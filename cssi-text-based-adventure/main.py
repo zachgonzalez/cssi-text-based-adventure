@@ -14,6 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+
 import webapp2
 import jinja2
 import os
@@ -45,13 +46,13 @@ class Events(ndb.Model):
 
 event_1 = Events(encounter = "Your bag caught on fire. Oops.", outcome = "All of your supplies are destroyed.")
 event_2 = Events(encounter = "You saw a bus", outcome = "You know what a bus looks like")
-event_3 = Events(encounter = "You see your brither get shot.", outcome = "You're sad.")
+event_3 = Events(encounter = "You see your brither get shot.", outcome = "You are sad.")
 event_4 = Events(encounter = "You find a penny.", outcome = "Gain 1 cent.")
 event_5 = Events(encounter = "The cops found and surrounded you.", outcome = "GAME OVER")
-event_6 = Events(encounter = "You found a cute kitty!", outcome = "You realize you’re allergic… *ACHOOO!*")
+event_6 = Events(encounter = "You found a cute kitty", outcome = "You realize you are allergic")
 event_7 = Events(encounter = "You find a cat!", outcome = "Now you look like the Joker. Congrats..")
 event_8 = Events(encounter = "You run into your old friend Riccardo!", outcome = "Lose twenty dollars.")
-event_9 = Events(encounter = "Hey look, it’s Manny! He’s got a riddle for you.", outcome = "Too bad you SUCK at riddles.")
+event_9 = Events(encounter = "Hey look, it is Manny He has got a riddle for you", outcome = "Too bad you SUCK at riddles.")
 event_10 = Events(encounter = "You find a ping pong paddle. ", outcome = "The air reeks of Liam...")
 event_11 = Events(encounter = "You see your brother on the run from the police! ", outcome = "You immediately run the opposite direction in fear of being mistaken for him")
 event_12 = Events(encounter = "A tree falls down!", outcome= "You can only go North.")
