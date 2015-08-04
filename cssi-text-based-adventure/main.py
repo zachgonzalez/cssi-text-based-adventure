@@ -14,6 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+
 import webapp2
 import jinja2
 import os
@@ -44,8 +45,10 @@ class Events(ndb.Model):
 
 
 event_1 = Events(encounter = "Your bag caught on fire. Oops.", outcome = "All of your supplies are destroyed.")
+<<<<<<< HEAD
 event_2 = Events(encounter = "You saw a bus.", outcome = "CONGRATULATIONS!! You know what a bus looks like")
 event_3 = Events(encounter = "You see your brother get shot.", outcome = "You're sad.")
+
 event_4 = Events(encounter = "You find a penny.", outcome = "Gain 1 cent.")
 event_5 = Events(encounter = "The cops found and surrounded you.", outcome = "GAME OVER")
 
