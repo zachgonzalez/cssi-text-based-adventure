@@ -104,6 +104,9 @@ class GameHandler(webapp2.RequestHandler):
             user_direction_template_vars = {"direction": user_direction, "story_text": story1, "event_encounter": ending_events[i].encounter, "event_outcome": ending_events[i].outcome }
             template = JINJA_ENVIRONMENT.get_template('templates/death.html')
             self.response.out.write(template.render(user_direction_template_vars))
+            event_list.append(event_1)
+            event_list.append(event_2)
+            event_list.append(event_3)
         else:
             i = random.randint(0,(len(event_list)-1))
             user_direction = self.request.get('user_direction')
@@ -139,10 +142,15 @@ class BarricadeHandler(webapp2.RequestHandler):
         #     user_direction_template_vars = {"direction": user_direction, "story_text": story1, "event_encounter": ending_events[i].encounter, "event_outcome": ending_events[i].outcome }
         #     template = JINJA_ENVIRONMENT.get_template('templates/index.html')
         #     self.response.out.write(template.render(user_direction_template_vars))
-        start_text = "You chose to hide in the dumpster and, luckily, the store owner moved it to the other side of the street. You made it past the cops and into a safe alley, but you cannot stay for long. Where would you like to go from here."
-        beginning = {"story_text": start_text}
-        template = JINJA_ENVIRONMENT.get_template('templates/barricade_results.html')
-        self.response.out.write(template.render(beginning))
+        if self.request.get('user_direction') == 'hide':
+            start_text = "You chose to hide in the dumpster and, luckily, the store owner moved it to the other side of the street. You made it past the cops and into a safe alley, but you cannot stay for long. Where would you like to go from here?"
+            beginning = {"story_text": start_text}
+            template = JINJA_ENVIRONMENT.get_template('templates/barricade_results.html')
+            self.response.out.write(template.render(beginning))
+        else:
+
+            template = JINJA_ENVIRONMENT.get_template('templates/death.html')
+            self.response.out.write(template.render())
 
 class DeathHandler(webapp2.RequestHandler):
     def get(self):
@@ -152,6 +160,6 @@ class DeathHandler(webapp2.RequestHandler):
 app = webapp2.WSGIApplication([
     ('/', MainHandler),
     ('/game', GameHandler),
-    ('/barricade-results', BarricadeHandler),
+    ('/barricaderesults', BarricadeHandler),
     ('/death', DeathHandler)
 ], debug=True)
