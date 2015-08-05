@@ -67,18 +67,24 @@ event_list = [event_1, event_2, event_3, event_13, event_9]
 ending_events = [event_4, event_5]
 directional_events = [event_12]
 
+
 class MainHandler(webapp2.RequestHandler):
       def get(self):
         user = users.get_current_user()
         if user:
-            greeting = ('Welcome, %s! (<a href="%s">Sign out</a>)' %
-                        (user.nickname(), users.create_logout_url('/')))
+            username = user.nickname()
+            signoutlink = users.create_logout_url('/')
+            signout = ('(<a href="%s">sign out</a>)' %(signoutlink))
+            #My additional code. Needed?
+            home_page = JINJA_ENVIRONMENT.get_template('templates/login.html')
+            start= {"username": user.nickname(), "signoutlink": users.create_logout_url('/'),
+            "greeting2":'Welcome!', "state_user": "Your username is: "}
+            self.response.out.write(home_page.render(start))
+            #End of additional code.
         else:
-            greeting = ('<a href="%s">Sign in or register</a>.' %
-                        users.create_login_url('/'))
+            greeting = ('<a href="%s">Sign in or register</a>.' %(users.create_login_url('/')))
 
-        self.response.out.write('<html><body>%s</body></html>' % greeting)
-
+            self.response.out.write('<html><body>%s</body></html>' %(greeting))
 
 class GameHandler(webapp2.RequestHandler):
     def get(self):
