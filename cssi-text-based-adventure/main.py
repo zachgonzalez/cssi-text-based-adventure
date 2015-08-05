@@ -87,6 +87,7 @@ class MainHandler(webapp2.RequestHandler):
             self.response.out.write('<html><body>%s</body></html>' %(greeting))
 
 class GameHandler(webapp2.RequestHandler):
+
     def get(self):
         start_text = "Your identical twin has set you up. He told you to meet him downtown at the Board of Trade building, and as you are arriving you realize that he has robbed the commissioners and is using you as a doppelganger. You don't realize this until you see the news in a store window nearby announcing the breaking news. Miraculously, you realize that you haven't been caught yet because the police think that the twin is still in the building and that he is wearing all black, but you are about a block away and wearing pastel colors. You have to get away from the scene quickly or you will have to pay a pretty bad price. Without a second thought, you decide you should run somewhere. To the north is Madison Street, to the west is a deserted alley, to the east is Wacker Drive, and to the south is Monroe Street."
         beginning = {"story_text": start_text}
@@ -94,18 +95,19 @@ class GameHandler(webapp2.RequestHandler):
         self.response.out.write(template.render(beginning))
 
     def post(self):
+
         if len(event_list) == 0:
             i = random.randint(0,(len(ending_events)-1))
 
             user_direction = self.request.get('user_direction')
             story1 = "This is what happens when you go " + user_direction.lower() + ":"
             user_direction_template_vars = {"direction": user_direction, "story_text": story1, "event_encounter": ending_events[i].encounter, "event_outcome": ending_events[i].outcome }
-            template = JINJA_ENVIRONMENT.get_template('templates/index.html')
+            template = JINJA_ENVIRONMENT.get_template('templates/death.html')
             self.response.out.write(template.render(user_direction_template_vars))
         else:
             i = random.randint(0,(len(event_list)-1))
             user_direction = self.request.get('user_direction')
-            story1 = "This is what happens when you go " + user_direction.lower() + ":"
+            story1 = "You went " + user_direction.lower() + ":"
 
             if event_list[i] == event_13:
                 user_direction_template_vars = {"direction": user_direction, "story_text": story1, "event_encounter": event_list[i].encounter, "event_outcome": event_list[i].outcome }
@@ -115,6 +117,7 @@ class GameHandler(webapp2.RequestHandler):
 
             elif event_list[i]==event_9:
                 user_direction_template_vars= {"direction": user_direction, "story_text": story1, "event_encounter": event_list[i].encounter, "event_outcome": event_list[i].outcome }
+                event_list.remove(event_list[i])
                 template = JINJA_ENVIRONMENT.get_template('templates/barricade.html')
                 self.response.out.write(template.render(user_direction_template_vars))
             else:
@@ -124,19 +127,22 @@ class GameHandler(webapp2.RequestHandler):
                 self.response.out.write(template.render(user_direction_template_vars))
                 # self.response.out.write("You went: " + user_input_loc)
 
-# class BarricadeHandler(webapp2.RequestHandler):
-#     def get(self):
-#
-#     def post(self):
-#         if len(event_list) == 0:
-#             i = random.randint(0,(len(ending_events)-1))
-#
-#             user_direction = self.request.get('user_direction')
-#             story1 = "This is what happens when you go " + user_direction.lower() + ":"
-#             user_direction_template_vars = {"direction": user_direction, "story_text": story1, "event_encounter": ending_events[i].encounter, "event_outcome": ending_events[i].outcome }
-#             template = JINJA_ENVIRONMENT.get_template('templates/index.html')
-#             self.response.out.write(template.render(user_direction_template_vars))
-
+class BarricadeHandler(webapp2.RequestHandler):
+    def get(self):
+        self.response.write('STOP TRYING TO SKIP AHEAD!!')
+    def post(self):
+        # if len(event_list) == 0:
+        #     i = random.randint(0,(len(ending_events)-1))
+        #
+        #     user_direction = self.request.get('user_direction')
+        #     story1 = "This is what happens when you go " + user_direction.lower() + ":"
+        #     user_direction_template_vars = {"direction": user_direction, "story_text": story1, "event_encounter": ending_events[i].encounter, "event_outcome": ending_events[i].outcome }
+        #     template = JINJA_ENVIRONMENT.get_template('templates/index.html')
+        #     self.response.out.write(template.render(user_direction_template_vars))
+        start_text = "You chose to hide in the dumpster and, luckily, the store owner moved it to the other side of the street. You made it past the cops and into a safe alley, but you cannot stay for long. Where would you like to go from here."
+        beginning = {"story_text": start_text}
+        template = JINJA_ENVIRONMENT.get_template('templates/barricade_results.html')
+        self.response.out.write(template.render(beginning))
 
 class DeathHandler(webapp2.RequestHandler):
     def get(self):
@@ -146,6 +152,6 @@ class DeathHandler(webapp2.RequestHandler):
 app = webapp2.WSGIApplication([
     ('/', MainHandler),
     ('/game', GameHandler),
-    # ('/barricade-results', BarricadeHandler)
+    ('/barricade-results', BarricadeHandler),
     ('/death', DeathHandler)
 ], debug=True)
