@@ -56,12 +56,12 @@ event_6 = Events(encounter = "You found a cute kitty!", outcome = "You realize y
 
 event_7 = Events(encounter = "You find a cat!", outcome = "Now you look like the Joker. Congrats..")
 event_8 = Events(encounter = "You run into your old friend Riccardo!", outcome = "Lose twenty dollars.")
-event_9 = Events(encounter = "You look up to see that the cops have barricaded the street.", outcome = "What would you like to do?")
+event_9 = Events(encounter = "You run into your brother while looking for a hiding place. He seems scared and confused.", outcome = "What would you like to do?")
 event_10 = Events(encounter = "You find a ping pong paddle. ", outcome = "The air reeks of Liam...")
 event_11 = Events(encounter = "You see your brother on the run from the police! ", outcome = "You immediately run the opposite direction in fear of being mistaken for him")
 event_12 = Events(encounter = "A tree falls down!", outcome= "You can only go North.")
 
-event_13 = Events(encounter = "You loook up to see that the cops have barricaded the street. What would you like to do?")
+event_13 = Events(encounter = "You loook up to see that the cops have barricaded the street.", outcome = "What would you like to do?")
 event_list = [event_1, event_2, event_3, event_13, event_9]
 
 ending_events = [event_4, event_5]
@@ -125,7 +125,7 @@ class GameHandler(webapp2.RequestHandler):
             elif event_list[i]==event_9:
                 user_direction_template_vars= {"direction": user_direction, "story_text": story1, "event_encounter": event_list[i].encounter, "event_outcome": event_list[i].outcome }
                 event_list.remove(event_list[i])
-                template = JINJA_ENVIRONMENT.get_template('templates/barricade.html')
+                template = JINJA_ENVIRONMENT.get_template('templates/findbrother.html')
                 self.response.out.write(template.render(user_direction_template_vars))
 
             else:
@@ -153,9 +153,33 @@ class BarricadeHandler(webapp2.RequestHandler):
             template = JINJA_ENVIRONMENT.get_template('templates/barricade_results.html')
             self.response.out.write(template.render(beginning))
         else:
-
+            start_text = "Looks like you chose the wrong option. You are now dead. Oops..."
+            beginning = {"story_text": start_text}
             template = JINJA_ENVIRONMENT.get_template('templates/death.html')
-            self.response.out.write(template.render())
+            self.response.out.write(template.render(beginning))
+
+class BrotherHandler(webapp2.RequestHandler):
+    def get(self):
+        self.response.write('STOP TRYING TO SKIP AHEAD!!')
+    def post(self):
+        # if len(event_list) == 0:
+        #     i = random.randint(0,(len(ending_events)-1))
+        #
+        #     user_direction = self.request.get('user_direction')
+        #     story1 = "This is what happens when you go " + user_direction.lower() + ":"
+        #     user_direction_template_vars = {"direction": user_direction, "story_text": story1, "event_encounter": ending_events[i].encounter, "event_outcome": ending_events[i].outcome }
+        #     template = JINJA_ENVIRONMENT.get_template('templates/index.html')
+        #     self.response.out.write(template.render(user_direction_template_vars))
+        if self.request.get('user_direction') == 'hide':
+            start_text = "You let your brother go. You may never see him again. That's pretty sad. Although, he did try to get you arrested so I guess all is fair... But the police are still looking, so you need to get moving."
+            beginning = {"story_text": start_text}
+            template = JINJA_ENVIRONMENT.get_template('templates/brother_results.html')
+            self.response.out.write(template.render(beginning))
+        else:
+            start_text = "Looks like you chose the wrong option. You are now dead. Oops..."
+            beginning = {"story_text": start_text}
+            template = JINJA_ENVIRONMENT.get_template('templates/death.html')
+            self.response.out.write(template.render(beginning))
 
 class DeathHandler(webapp2.RequestHandler):
     def get(self):
@@ -166,5 +190,6 @@ app = webapp2.WSGIApplication([
     ('/', MainHandler),
     ('/game', GameHandler),
     ('/barricaderesults', BarricadeHandler),
+    ('/brotherresults', BrotherHandler),
     ('/death', DeathHandler)
 ], debug=True)
