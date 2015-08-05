@@ -75,7 +75,7 @@ class MainHandler(webapp2.RequestHandler):
             username = user.nickname()
             signoutlink = users.create_logout_url('/')
             signout = ('(<a href="%s">sign out</a>)' %(signoutlink))
-            #My additional code. Needed?
+            #Damerrick's additional code. Needed?
             home_page = JINJA_ENVIRONMENT.get_template('templates/login.html')
             start= {"username": user.nickname(), "signoutlink": users.create_logout_url('/'),
             "greeting2":'Welcome!', "state_user": "Your username is: "}
