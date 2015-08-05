@@ -50,7 +50,7 @@ event_2 = Events(encounter = "You saw a bus.", outcome = "CONGRATULATIONS!! You 
 event_3 = Events(encounter = "You see your brother get shot.", outcome = "You're sad.")
 
 event_4 = Events(encounter = "You find a penny.", outcome = "Gain 1 cent.")
-event_5 = Events(encounter = "The cops found and surrounded you.", outcome = "GAME OVER")
+event_5 = Events(encounter = "The cops found and surrounded you.", outcome = "")
 
 event_6 = Events(encounter = "You found a cute kitty!", outcome = "You realize you are allergic.")
 
