@@ -44,28 +44,28 @@ class Events(ndb.Model):
 
 
 
-event_1 = Events(encounter = "Your bag caught on fire. Oops.", outcome = "All of your supplies are destroyed.")
+event_1 = Events(encounter = "A creepy guy catcalls you.", outcome = "How rude.")
 
-event_2 = Events(encounter = "You saw a bus.", outcome = "CONGRATULATIONS!! You know what a bus looks like")
-event_3 = Events(encounter = "You see your brother get shot.", outcome = "You're sad.")
+event_2 = Events(encounter = "You saw a bus.", outcome = "CONGRATULATIONS!! You know what a bus looks like.")
+event_3 = Events(encounter = "A taxi comes by and splashes mud on your clothes, ruining the pastel look.", outcome = "You now look even more like your brother!")
 
 event_4 = Events(encounter = "Your mom comes and picks you up.", outcome = "Nap time!")
 event_5 = Events(encounter = "The cops found and surrounded you.", outcome = "")
 
-event_6 = Events(encounter = "You found a cute kitty!", outcome = "You realize you are allergic.")
+event_6 = Events(encounter = "A fire alarm goes off in a nearby building, occupying some of the police looking for your brother.", outcome = "Your journey is safe... for now.")
 
-event_7 = Events(encounter = "You find a cat!", outcome = "Now you look like the Joker. Congrats..")
+event_7 = Events(encounter = "Traffic signals are out all throughout the city.", outcome = "Looks like catching a cab won't be an option.")
 event_8 = Events(encounter = "You run into your old friend Riccardo!", outcome = "Lose twenty dollars.")
 event_9 = Events(encounter = "You run into your brother while looking for a hiding place. He seems scared and confused.", outcome = "What would you like to do?")
-event_10 = Events(encounter = "You find a ping pong paddle. ", outcome = "The air reeks of Liam...")
-event_11 = Events(encounter = "You see your brother on the run from the police! ", outcome = "You immediately run the opposite direction in fear of being mistaken for him")
-event_12 = Events(encounter = "A tree falls down!", outcome= "You can only go North.")
+event_10 = Events(encounter = "A television crew is filming accross the street.", outcome = "You think about taking a shot at fame and becoming an extra, but you realize you must keep moving.")
+event_11 = Events(encounter = "Looks as though the cops have shutdown public transportation to help find the thief.", outcome = "Walking seems to be your only option.")
+event_12 = Events(encounter = "You walk past the Trump Tower.", outcome= "You spit in its general direction.")
 
 event_13 = Events(encounter = "You loook up to see that the cops have barricaded the street.", outcome = "What would you like to do?")
-event_list = [event_1, event_2, event_3, event_13, event_9]
+event_list = [event_1, event_2, event_3, event_6, event_7, event_8, event_9, event_10, event_11, event_12, event_13]
 
 ending_events = [event_4, event_5]
-directional_events = [event_12]
+
 
 
 class MainHandler(webapp2.RequestHandler):
@@ -108,13 +108,22 @@ class GameHandler(webapp2.RequestHandler):
             else:
                 template = JINJA_ENVIRONMENT.get_template('templates/victory.html')
                 self.response.out.write(template.render(user_direction_template_vars))
-            event_list.append(event_1)
-            event_list.append(event_2)
-            event_list.append(event_3)
+                event_list.append(event_1)
+                event_list.append(event_2)
+                event_list.append(event_3)
+                event_list.append(event_6)
+                event_list.append(event_7)
+                event_list.append(event_8)
+                event_list.append(event_9)
+                event_list.append(event_10)
+                event_list.append(event_11)
+                event_list.append(event_12)
+                event_list.append(event_13)
+
         else:
             i = random.randint(0,(len(event_list)-1))
             user_direction = self.request.get('user_direction')
-            story1 = "You went " + user_direction.lower() + ":"
+            story1 = "Your choice was " + user_direction.capitalize() + ":"
 
             if event_list[i] == event_13:
                 user_direction_template_vars = {"direction": user_direction, "story_text": story1, "event_encounter": event_list[i].encounter, "event_outcome": event_list[i].outcome }
@@ -157,6 +166,8 @@ class BarricadeHandler(webapp2.RequestHandler):
             beginning = {"story_text": start_text}
             template = JINJA_ENVIRONMENT.get_template('templates/death.html')
             self.response.out.write(template.render(beginning))
+            for event in event_list:
+                event_list.remove(event)
 
 class BrotherHandler(webapp2.RequestHandler):
     def get(self):
@@ -180,6 +191,8 @@ class BrotherHandler(webapp2.RequestHandler):
             beginning = {"story_text": start_text}
             template = JINJA_ENVIRONMENT.get_template('templates/death.html')
             self.response.out.write(template.render(beginning))
+            for event in event_list:
+                event_list.remove(event)
 
 class DeathHandler(webapp2.RequestHandler):
     def get(self):
