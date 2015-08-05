@@ -7,6 +7,8 @@ threadsafe: yes
 handlers:
 - url: /_ah/login_required
   script: do_openid_login.app
+- url: /_ah/logout?
+  script: do_openid_login.app
 - url: /stylesheets
   static_dir: stylesheets
 - url: /favicon\.ico
