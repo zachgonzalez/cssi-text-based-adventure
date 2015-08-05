@@ -49,7 +49,7 @@ event_1 = Events(encounter = "Your bag caught on fire. Oops.", outcome = "All of
 event_2 = Events(encounter = "You saw a bus.", outcome = "CONGRATULATIONS!! You know what a bus looks like")
 event_3 = Events(encounter = "You see your brother get shot.", outcome = "You're sad.")
 
-event_4 = Events(encounter = "You find a penny.", outcome = "Gain 1 cent.")
+event_4 = Events(encounter = "Your mom comes and picks you up.", outcome = "Nap time!")
 event_5 = Events(encounter = "The cops found and surrounded you.", outcome = "")
 
 event_6 = Events(encounter = "You found a cute kitty!", outcome = "You realize you are allergic.")
@@ -102,8 +102,12 @@ class GameHandler(webapp2.RequestHandler):
             user_direction = self.request.get('user_direction')
             story1 = "This is what happens when you go " + user_direction.lower() + ":"
             user_direction_template_vars = {"direction": user_direction, "story_text": story1, "event_encounter": ending_events[i].encounter, "event_outcome": ending_events[i].outcome }
-            template = JINJA_ENVIRONMENT.get_template('templates/death.html')
-            self.response.out.write(template.render(user_direction_template_vars))
+            if ending_events[i] != event_4:
+                template = JINJA_ENVIRONMENT.get_template('templates/death.html')
+                self.response.out.write(template.render(user_direction_template_vars))
+            else:
+                template = JINJA_ENVIRONMENT.get_template('templates/victory.html')
+                self.response.out.write(template.render(user_direction_template_vars))
             event_list.append(event_1)
             event_list.append(event_2)
             event_list.append(event_3)
@@ -123,6 +127,7 @@ class GameHandler(webapp2.RequestHandler):
                 event_list.remove(event_list[i])
                 template = JINJA_ENVIRONMENT.get_template('templates/barricade.html')
                 self.response.out.write(template.render(user_direction_template_vars))
+
             else:
                 user_direction_template_vars = {"direction": user_direction, "story_text": story1, "event_encounter": event_list[i].encounter, "event_outcome": event_list[i].outcome }
                 event_list.remove(event_list[i])
