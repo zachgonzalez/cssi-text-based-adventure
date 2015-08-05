@@ -56,7 +56,7 @@ event_6 = Events(encounter = "You found a cute kitty!", outcome = "You realize y
 
 event_7 = Events(encounter = "You find a cat!", outcome = "Now you look like the Joker. Congrats..")
 event_8 = Events(encounter = "You run into your old friend Riccardo!", outcome = "Lose twenty dollars.")
-event_9 = Events(encounter = "Hey look, it is Manny! He has got a riddle for you.", outcome = "Too bad you SUCK at riddles.")
+event_9 = Events(encounter = "You look up to see that the cops have barricaded the street.", outcome = "What would you like to do?")
 event_10 = Events(encounter = "You find a ping pong paddle. ", outcome = "The air reeks of Liam...")
 event_11 = Events(encounter = "You see your brother on the run from the police! ", outcome = "You immediately run the opposite direction in fear of being mistaken for him")
 event_12 = Events(encounter = "A tree falls down!", outcome= "You can only go North.")
