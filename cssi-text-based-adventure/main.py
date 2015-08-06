@@ -62,7 +62,18 @@ event_11 = Events(encounter = "Looks as though the cops have shutdown public tra
 event_12 = Events(encounter = "You walk past the Trump Tower.", outcome= "You spit in its general direction.")
 
 event_13 = Events(encounter = "You loook up to see that the cops have barricaded the street.", outcome = "What would you like to do?")
-event_list = [event_1, event_2, event_3, event_6, event_7, event_8, event_9, event_10, event_11, event_12, event_13]
+event_list = [event_1,
+              event_2,
+              event_3,
+              event_6,
+              event_7,
+              event_8,
+              event_9,
+              event_10,
+              event_11,
+              event_12,
+              event_13
+              ]
 
 ending_events = [event_4, event_5]
 
@@ -100,11 +111,22 @@ class GameHandler(webapp2.RequestHandler):
             i = random.randint(0,(len(ending_events)-1))
 
             user_direction = self.request.get('user_direction')
-            story1 = "This is what happens when you go " + user_direction.lower() + ":"
-            user_direction_template_vars = {"direction": user_direction, "story_text": story1, "event_encounter": ending_events[i].encounter, "event_outcome": ending_events[i].outcome }
+            # story1 = "This is what happens when you go " + user_direction.lower() + ":"
+            user_direction_template_vars = {"direction": user_direction, "event_encounter": ending_events[i].encounter, "event_outcome": ending_events[i].outcome }
             if ending_events[i] != event_4:
                 template = JINJA_ENVIRONMENT.get_template('templates/death.html')
                 self.response.out.write(template.render(user_direction_template_vars))
+                event_list.append(event_1)
+                event_list.append(event_2)
+                event_list.append(event_3)
+                event_list.append(event_6)
+                event_list.append(event_7)
+                event_list.append(event_8)
+                event_list.append(event_9)
+                event_list.append(event_10)
+                event_list.append(event_11)
+                event_list.append(event_12)
+                event_list.append(event_13)
             else:
                 template = JINJA_ENVIRONMENT.get_template('templates/victory.html')
                 self.response.out.write(template.render(user_direction_template_vars))
@@ -168,6 +190,17 @@ class BarricadeHandler(webapp2.RequestHandler):
             self.response.out.write(template.render(beginning))
             for event in event_list:
                 event_list.remove(event)
+            event_list.append(event_1)
+            event_list.append(event_2)
+            event_list.append(event_3)
+            event_list.append(event_6)
+            event_list.append(event_7)
+            event_list.append(event_8)
+            event_list.append(event_9)
+            event_list.append(event_10)
+            event_list.append(event_11)
+            event_list.append(event_12)
+            event_list.append(event_13)
 
 class BrotherHandler(webapp2.RequestHandler):
     def get(self):
@@ -193,6 +226,17 @@ class BrotherHandler(webapp2.RequestHandler):
             self.response.out.write(template.render(beginning))
             for event in event_list:
                 event_list.remove(event)
+            event_list.append(event_1)
+            event_list.append(event_2)
+            event_list.append(event_3)
+            event_list.append(event_6)
+            event_list.append(event_7)
+            event_list.append(event_8)
+            event_list.append(event_9)
+            event_list.append(event_10)
+            event_list.append(event_11)
+            event_list.append(event_12)
+            event_list.append(event_13)
 
 class DeathHandler(webapp2.RequestHandler):
     def get(self):
