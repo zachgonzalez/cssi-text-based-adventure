@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+  <header>
+    <title>Game</title>
+    <link rel ="stylesheet" type="text/css" href="stylesheets/style.css">
+  </header>
+  <body>
+    <h1>Welcome to the game of life.</h1>
+    <p></p>
+    <div><center>
+    <form method="post" action = "/extraresults" style="width: 500px" required>{{story_text}} {{event_encounter}} {{event_outcome}}
+    <br>
+      <span id="picofstart"><img src="https://geistesstreich.files.wordpress.com/2010/12/polizeisperre-neu.jpg" height="400px" width=90%></img></span>
+      <center>What would you like to do?<br>
+      <div style="text-align: left; width: 300px">
+      <input  type="radio" name="user_direction" value="continue" required>Keep moving. The cops could be here any minute.<br>
+      <input  type="radio" name="user_direction" value="extra" required>Try and be an extra!<br>
+      <input type="radio" name="user_direction" value="autographs" required>Beg for autographs.<br>
+
+      </div>
+      <input  type="submit" value="Do this."></input>
+    </div>
+
+    </center></form>
+  </div>
+
+  <!-- <p> You went <span style="text-transform: uppercase">{{direction}}</span></p> -->
+  </body>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+  <script src="js/jquery.js" type="text/javascript" ></script>
+</html>
