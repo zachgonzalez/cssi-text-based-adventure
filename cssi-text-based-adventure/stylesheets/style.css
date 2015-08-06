@@ -55,17 +55,13 @@ form {
 
 
 #score_counter {
-  padding-top: 1mm;
+  padding-top: 2mm;
   width: 100px;
   height: 50px;
   background-color: beige;
   border-style: outset;
   border-color: yellow;
   border-width: thick;
-  float:right;
-  position: relative;
-  top: -680px;
-  right: 200px;
   text-align: center;
 }
 a.button {
