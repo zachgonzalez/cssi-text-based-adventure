@@ -57,7 +57,7 @@ event_6 = Events(encounter = "A fire alarm goes off in a nearby building, occupy
 event_7 = Events(encounter = "Traffic signals are out all throughout the city.", outcome = "Looks like catching a cab won't be an option.")
 event_8 = Events(encounter = "You run into your old friend Riccardo!", outcome = "Lose twenty dollars.")
 event_9 = Events(encounter = "You run into your brother while looking for a hiding place. He seems scared and confused.", outcome = "What would you like to do?")
-event_10 = Events(encounter = "A television crew is filming accross the street.", outcome = "You think about taking a shot at fame and becoming an extra, but you realize you must keep moving.")
+event_10 = Events(encounter = "A television crew is filming accross the street. It's your favorite show, Empire!", outcome = "They appear to be looking for extras. What would you like to do?")
 event_11 = Events(encounter = "Looks as though the cops have shutdown public transportation to help find the thief.", outcome = "Walking seems to be your only option.")
 event_12 = Events(encounter = "You walk past the Trump Tower.", outcome= "You spit in its general direction.")
 
@@ -159,6 +159,12 @@ class GameHandler(webapp2.RequestHandler):
                 template = JINJA_ENVIRONMENT.get_template('templates/findbrother.html')
                 self.response.out.write(template.render(user_direction_template_vars))
 
+            elif event_list[i]==event_10:
+                user_direction_template_vars= {"direction": user_direction, "story_text": story1, "event_encounter": event_list[i].encounter, "event_outcome": event_list[i].outcome }
+                event_list.remove(event_list[i])
+                template = JINJA_ENVIRONMENT.get_template('templates/extra.html')
+                self.response.out.write(template.render(user_direction_template_vars))
+
             else:
                 user_direction_template_vars = {"direction": user_direction, "story_text": story1, "event_encounter": event_list[i].encounter, "event_outcome": event_list[i].outcome }
                 event_list.remove(event_list[i])
@@ -206,14 +212,6 @@ class BrotherHandler(webapp2.RequestHandler):
     def get(self):
         self.response.write('STOP TRYING TO SKIP AHEAD!!')
     def post(self):
-        # if len(event_list) == 0:
-        #     i = random.randint(0,(len(ending_events)-1))
-        #
-        #     user_direction = self.request.get('user_direction')
-        #     story1 = "This is what happens when you go " + user_direction.lower() + ":"
-        #     user_direction_template_vars = {"direction": user_direction, "story_text": story1, "event_encounter": ending_events[i].encounter, "event_outcome": ending_events[i].outcome }
-        #     template = JINJA_ENVIRONMENT.get_template('templates/index.html')
-        #     self.response.out.write(template.render(user_direction_template_vars))
         if self.request.get('user_direction') == 'hide':
             start_text = "You let your brother go. You may never see him again. That's pretty sad. Although, he did try to get you arrested so I guess all is fair... But the police are still looking, so you need to get moving."
             beginning = {"story_text": start_text}
@@ -221,6 +219,34 @@ class BrotherHandler(webapp2.RequestHandler):
             self.response.out.write(template.render(beginning))
         else:
             start_text = "Looks like you chose the wrong option. You are now dead. Oops..."
+            beginning = {"story_text": start_text}
+            template = JINJA_ENVIRONMENT.get_template('templates/death.html')
+            self.response.out.write(template.render(beginning))
+            for event in event_list:
+                event_list.remove(event)
+            event_list.append(event_1)
+            event_list.append(event_2)
+            event_list.append(event_3)
+            event_list.append(event_6)
+            event_list.append(event_7)
+            event_list.append(event_8)
+            event_list.append(event_9)
+            event_list.append(event_10)
+            event_list.append(event_11)
+            event_list.append(event_12)
+            event_list.append(event_13)
+
+class ExtraHandler(webapp2.RequestHandler):
+    def get(self):
+        self.response.write('STOP TRYING TO SKIP AHEAD!!')
+    def post(self):
+        if self.request.get('user_direction') == 'extra':
+            start_text = "You decide to become an extra. Your decision pays off as you blend right in with the crowd. There are no cops around currently, but the shoot is wrapping up, so you will have to keep moving."
+            beginning = {"story_text": start_text}
+            template = JINJA_ENVIRONMENT.get_template('templates/extra_results.html')
+            self.response.out.write(template.render(beginning))
+        else:
+            start_text = "You could have just been an extra... Now look what you have done."
             beginning = {"story_text": start_text}
             template = JINJA_ENVIRONMENT.get_template('templates/death.html')
             self.response.out.write(template.render(beginning))
@@ -248,5 +274,6 @@ app = webapp2.WSGIApplication([
     ('/game', GameHandler),
     ('/barricaderesults', BarricadeHandler),
     ('/brotherresults', BrotherHandler),
+    ('/extraresults', ExtraHandler),
     ('/death', DeathHandler)
 ], debug=True)
