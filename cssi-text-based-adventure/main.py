@@ -47,7 +47,7 @@ class Events(ndb.Model):
 event_1 = Events(encounter = "A creepy guy catcalls you.", outcome = "How rude.")
 
 event_2 = Events(encounter = "You saw a bus.", outcome = "CONGRATULATIONS!! You know what a bus looks like.")
-event_3 = Events(encounter = "A taxi comes by and splashes mud on your clothes, ruining the pastel look.", outcome = "You now look even more like your brother!")
+event_3 = Events(encounter = "A taxi comes by and splashes mud on your clothes, ruining the pastel look.", outcome = "")
 
 event_4 = Events(encounter = "Your mom comes and picks you up.", outcome = "Nap time!")
 event_5 = Events(encounter = "The cops found and surrounded you.", outcome = "")
@@ -165,6 +165,12 @@ class GameHandler(webapp2.RequestHandler):
                 template = JINJA_ENVIRONMENT.get_template('templates/extra.html')
                 self.response.out.write(template.render(user_direction_template_vars))
 
+            elif event_list[i]==event_3:
+                user_direction_template_vars= {"direction": user_direction, "story_text": story1, "event_encounter": event_list[i].encounter, "event_outcome": event_list[i].outcome }
+                event_list.remove(event_list[i])
+                template = JINJA_ENVIRONMENT.get_template('templates/clothes.html')
+                self.response.out.write(template.render(user_direction_template_vars))
+
             else:
                 user_direction_template_vars = {"direction": user_direction, "story_text": story1, "event_encounter": event_list[i].encounter, "event_outcome": event_list[i].outcome }
                 event_list.remove(event_list[i])
@@ -263,6 +269,33 @@ class ExtraHandler(webapp2.RequestHandler):
             event_list.append(event_11)
             event_list.append(event_12)
             event_list.append(event_13)
+class ClothesHandler(webapp2.RequestHandler):
+    def get(self):
+        self.response.write('STOP TRYING TO SKIP AHEAD!!')
+    def post(self):
+        if self.request.get('user_direction') == 'trade':
+            start_text = "You see a young man about your size and run up to him. He is so excited to wear your gross clothes and rambles on for ten minutes about how you\'re helping him embrace his artsy side. Finally you manage to end the conversation. The cops could be anywhere though. Where next?"
+            beginning = {"story_text": start_text}
+            template = JINJA_ENVIRONMENT.get_template('templates/clothes_results.html')
+            self.response.out.write(template.render(beginning))
+        else:
+            start_text = "Clothes are important I guess..."
+            beginning = {"story_text": start_text}
+            template = JINJA_ENVIRONMENT.get_template('templates/death.html')
+            self.response.out.write(template.render(beginning))
+            for event in event_list:
+                event_list.remove(event)
+            event_list.append(event_1)
+            event_list.append(event_2)
+            event_list.append(event_3)
+            event_list.append(event_6)
+            event_list.append(event_7)
+            event_list.append(event_8)
+            event_list.append(event_9)
+            event_list.append(event_10)
+            event_list.append(event_11)
+            event_list.append(event_12)
+            event_list.append(event_13)
 
 class DeathHandler(webapp2.RequestHandler):
     def get(self):
@@ -275,5 +308,6 @@ app = webapp2.WSGIApplication([
     ('/barricaderesults', BarricadeHandler),
     ('/brotherresults', BrotherHandler),
     ('/extraresults', ExtraHandler),
-    ('/death', DeathHandler)
+    ('/death', DeathHandler),
+    ('/clothesresults', ClothesHandler)
 ], debug=True)
