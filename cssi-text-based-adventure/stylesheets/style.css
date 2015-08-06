@@ -28,6 +28,15 @@ form {
   object-position: center;
   position: static;
 }
+.picborder {
+  background-color: beige;
+  border: 5000px;
+  border-style: inset;
+  border-color: yellow;
+  border-width: thick;
+  object-position: center;
+  position: static;
+}
 a.button {
     -webkit-appearance: button;
     -moz-appearance: button;
