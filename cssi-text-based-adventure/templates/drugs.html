@@ -8,23 +8,21 @@
     <h1>Welcome to the game of life.</h1>
     <p></p>
     <div><center>
-    <form method="post" action = "/barricaderesults" style="width: 500px" required>{{story_text}} {{event_encounter}} {{event_outcome}}
+    <form method="post" action = "/drugsresults" style="width: 500px" required>{{story_text}} {{event_encounter}} {{event_outcome}}
     <br>
       <span id="picofstart"><img src="https://geistesstreich.files.wordpress.com/2010/12/polizeisperre-neu.jpg" height="400px" width=90%></img></span>
       <center>What would you like to do?<br>
       <div style="text-align: left; width: 300px">
-      <input  type="radio" name="user_direction" value="shoot" required>Shoot at the police. Go out with a bang.<br>
-      <input type="radio" name="user_direction" value="surrender" required>Surrender.<br>
-      <input  type="radio" name="user_direction" value="hide" required>Hide in a nearby dumpster.<br>
+      <input  type="radio" name="user_direction" value="no" required>You don't have time for this.<br>
+      <input  type="radio" name="user_direction" value="drugs" required>That price is too good to pass up.<br>
+
       </div>
       <input  type="submit" value="Do this."></input>
     </div>
 
     </center></form>
   </div>
-  <div id="score_counter">
-    <p> In this game, you get one point for every round survived. Your current score is: {{user_score}} </p>
-  </div>
+
   <!-- <p> You went <span style="text-transform: uppercase">{{direction}}</span></p> -->
   </body>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
