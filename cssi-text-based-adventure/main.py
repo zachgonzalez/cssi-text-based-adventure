@@ -30,19 +30,13 @@ JINJA_ENVIRONMENT = jinja2.Environment(
     extensions=['jinja2.ext.autoescape'],
     autoescape=True)
 
-
-
-
 class UserModel(ndb.Model):
     currentUser = ndb.StringProperty(required= True)
     text = ndb.TextProperty()
 
-
 class Events(ndb.Model):
     encounter = ndb.StringProperty()
     outcome = ndb.StringProperty()
-
-
 
 event_1 = Events(encounter = "A creepy guy catcalls you.", outcome = "How rude.")
 
