@@ -2,28 +2,31 @@
 <html>
   <header>
     <title>Game</title>
+    <link href='http://fonts.googleapis.com/css?family=Rock+Salt' rel='stylesheet' type='text/css'>
     <link rel ="stylesheet" type="text/css" href="stylesheets/style.css">
   </header>
   <body>
     <h1>It's The Game of Life.</h1>
-    <p></p>
-    <div><center>
-    <form method="post" action="/game" style="width: 500px" >{{story_text}} {{event_encounter}} {{event_outcome}}
-    <br>
-      <span id="picofstart"><img src="http://i.huffpost.com/gen/1941141/images/o-CHICAGO-SHOOTING-facebook.jpg" height="400px" width=90%></img></span>
-      <center>Which direction would you like to go?<br>
-      <div style="text-align: left; width: 56px">
-      <input type="radio" name="user_direction" value="North" required>North<br>
-      <input type="radio" name="user_direction" value="South" required>South<br>
-      <input type="radio" name="user_direction" value="East" required>  East<br>
-      <input type="radio" name="user_direction" value="West" required>West<br>
+
+   <div>
+      <center><form id="gamebox" method="post" action="/game" style="width: 500px" >{{story_text}} {{event_encounter}} {{event_outcome}}
+          <br>
+          <span id="picofstart"><img src="http://i.huffpost.com/gen/1941141/images/o-CHICAGO-SHOOTING-facebook.jpg" height="400px" width=90%></img></span>
+          <center>Which direction would you like to go?<br>
+            <div style="text-align: left; width: 56px">
+              <input type="radio" name="user_direction" value="North" required>North<br>
+              <input type="radio" name="user_direction" value="South" required>South<br>
+              <input type="radio" name="user_direction" value="East" required>  East<br>
+              <input type="radio" name="user_direction" value="West" required>West<br>
+            </div><br>
+            <input type="submit" value="Take me this way!"></input>
+            <br><br>
+        </form></center>
     </div>
-      <input type="submit" value="Take me this way!"></input>
-    </center></form>
-  </div>
-  <div id="score_counter">
-    <p> In this game, you get one point for every round survived. Your current score is: {{user_score}} </p>
-  </div>
+
+    <div id='score_counter'>
+      <p> In this game, you get one point for every round survived. Your current score is: {{user_score}} </p>
+    </div>
 
   <!-- <p> You went <span style="text-transform: uppercase">{{direction}}</span></p> -->
   </body>

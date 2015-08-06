@@ -1,3 +1,14 @@
+@import url(http://fonts.googleapis.com/css?family=Rock+Salt);
+
+h1 {
+  font-family: 'Rock Salt', cursive;
+  left: 50%;
+
+  }
+#gamebox {
+  margin-left: 25%;
+  margin-right: 25%;
+}
 #direction {
   text-transform: uppercase;
 }
@@ -11,13 +22,13 @@ html {
 }
 
 form {
+  margin: 0 auto;
   background-color: beige;
-  border: 5000px;
+  border: 5px;
   border-style: inset;
   border-color: yellow;
   border-width: thick;
-  object-position: center;
-  position: static;
+  position: relative;
 }
 #aboutpage {
   background-color: beige;
@@ -36,6 +47,19 @@ form {
   border-width: thick;
   object-position: center;
   position: static;
+}
+
+
+#score_counter {
+  width: 300px;
+  background-color: beige;
+  border-style: outset;
+  border-color: yellow;
+  border-width: thick;
+  float:right;
+  position: absolute;
+  top: 20%;
+  left: 73%;
 }
 a.button {
     -webkit-appearance: button;
