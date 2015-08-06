@@ -1,4 +1,5 @@
 @import url(http://fonts.googleapis.com/css?family=Rock+Salt);
+@import url(http://fonts.googleapis.com/css?family=Rock+Salt|Special+Elite);
 
 h1 {
   font-family: 'Rock Salt', cursive;
@@ -14,6 +15,7 @@ h1 {
 }
 
 html {
+  font-family: 'Special Elite', cursive;
   color: #FF00FF;
   background-color: black;
   align-content: center;
@@ -22,6 +24,8 @@ html {
 }
 
 form {
+  padding-top: 2mm;
+  font-size: 9pt;
   margin: 0 auto;
   background-color: beige;
   border: 5px;
@@ -51,15 +55,18 @@ form {
 
 
 #score_counter {
-  width: 300px;
+  padding-top: 1mm;
+  width: 100px;
+  height: 50px;
   background-color: beige;
   border-style: outset;
   border-color: yellow;
   border-width: thick;
   float:right;
   position: absolute;
-  top: 20%;
-  left: 73%;
+  bottom: 485px;
+  left: 900px;
+  text-align: center;
 }
 a.button {
     -webkit-appearance: button;
