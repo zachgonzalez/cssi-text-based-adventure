@@ -62,6 +62,7 @@ event_11 = Events(encounter = "Looks as though the cops have shutdown public tra
 event_12 = Events(encounter = "You walk past the Trump Tower.", outcome= "You spit in its general direction.")
 
 event_13 = Events(encounter = "You loook up to see that the cops have barricaded the street.", outcome = "What would you like to do?")
+event_14 = Events(encounter = "You notice an old lady trying to cross the street.", outcome = "Should you help her?")
 event_list = [event_1,
               event_2,
               event_3,
@@ -72,7 +73,8 @@ event_list = [event_1,
               event_10,
               event_11,
               event_12,
-              event_13
+              event_13,
+              event_14
               ]
 
 ending_events = [event_4, event_5]
@@ -169,6 +171,12 @@ class GameHandler(webapp2.RequestHandler):
                 user_direction_template_vars= {"direction": user_direction, "story_text": story1, "event_encounter": event_list[i].encounter, "event_outcome": event_list[i].outcome }
                 event_list.remove(event_list[i])
                 template = JINJA_ENVIRONMENT.get_template('templates/clothes.html')
+                self.response.out.write(template.render(user_direction_template_vars))
+
+            elif event_list[i]==event_14:
+                user_direction_template_vars= {"direction": user_direction, "story_text": story1, "event_encounter": event_list[i].encounter, "event_outcome": event_list[i].outcome }
+                event_list.remove(event_list[i])
+                template = JINJA_ENVIRONMENT.get_template('templates/oldwoman.html')
                 self.response.out.write(template.render(user_direction_template_vars))
 
             else:
@@ -269,6 +277,7 @@ class ExtraHandler(webapp2.RequestHandler):
             event_list.append(event_11)
             event_list.append(event_12)
             event_list.append(event_13)
+
 class ClothesHandler(webapp2.RequestHandler):
     def get(self):
         self.response.write('STOP TRYING TO SKIP AHEAD!!')
@@ -297,6 +306,35 @@ class ClothesHandler(webapp2.RequestHandler):
             event_list.append(event_12)
             event_list.append(event_13)
 
+class OldwomanHandler(webapp2.RequestHandler):
+    def get(self):
+        self.response.write('STOP TRYING TO SKIP AHEAD!!')
+    def post(self):
+        if self.request.get('user_direction') == 'no':
+            start_text = "You keep moving. Your life is way more important then helping some old hag."
+            beginning = {"story_text": start_text}
+            template = JINJA_ENVIRONMENT.get_template('templates/oldwoman_results.html')
+            self.response.out.write(template.render(beginning))
+        else:
+            start_text = "Why would anyone ever help the elderly.."
+            beginning = {"story_text": start_text}
+            template = JINJA_ENVIRONMENT.get_template('templates/death.html')
+            self.response.out.write(template.render(beginning))
+            for event in event_list:
+                event_list.remove(event)
+            event_list.append(event_1)
+            event_list.append(event_2)
+            event_list.append(event_3)
+            event_list.append(event_6)
+            event_list.append(event_7)
+            event_list.append(event_8)
+            event_list.append(event_9)
+            event_list.append(event_10)
+            event_list.append(event_11)
+            event_list.append(event_12)
+            event_list.append(event_13)
+
+
 class DeathHandler(webapp2.RequestHandler):
     def get(self):
         template = JINJA_ENVIRONMENT.get_template('templates/death.html')
@@ -309,5 +347,6 @@ app = webapp2.WSGIApplication([
     ('/brotherresults', BrotherHandler),
     ('/extraresults', ExtraHandler),
     ('/death', DeathHandler),
-    ('/clothesresults', ClothesHandler)
+    ('/clothesresults', ClothesHandler),
+    ('/oldwomanresults', OldwomanHandler)
 ], debug=True)
