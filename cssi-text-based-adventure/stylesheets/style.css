@@ -63,9 +63,9 @@ form {
   border-color: yellow;
   border-width: thick;
   float:right;
-  position: absolute;
-  bottom: 485px;
-  left: 900px;
+  position: relative;
+  top: -680px;
+  right: 200px;
   text-align: center;
 }
 a.button {
