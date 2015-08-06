@@ -243,10 +243,16 @@ class DeathHandler(webapp2.RequestHandler):
         template = JINJA_ENVIRONMENT.get_template('templates/death.html')
         self.response.out.write(template.render())
 
+class AboutHandler(webapp2.RequestHandler):
+    def get(self):
+        template = JINJA_ENVIRONMENT.get_template('templates/about.html')
+        self.response.out.write(template.render())
+
 app = webapp2.WSGIApplication([
     ('/', MainHandler),
     ('/game', GameHandler),
     ('/barricaderesults', BarricadeHandler),
     ('/brotherresults', BrotherHandler),
-    ('/death', DeathHandler)
+    ('/death', DeathHandler),
+    ('/about', AboutHandler),
 ], debug=True)
