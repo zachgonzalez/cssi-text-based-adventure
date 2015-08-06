@@ -79,6 +79,8 @@ event_list = [event_1,
 
 ending_events = [event_4, event_5]
 
+user_score = 0
+
 
 
 class MainHandler(webapp2.RequestHandler):
@@ -111,10 +113,10 @@ class GameHandler(webapp2.RequestHandler):
 
         if len(event_list) == 0:
             i = random.randint(0,(len(ending_events)-1))
-
+            global user_score
             user_direction = self.request.get('user_direction')
             # story1 = "This is what happens when you go " + user_direction.lower() + ":"
-            user_direction_template_vars = {"direction": user_direction, "event_encounter": ending_events[i].encounter, "event_outcome": ending_events[i].outcome }
+            user_direction_template_vars = {"direction": user_direction, "event_encounter": ending_events[i].encounter, "event_outcome": ending_events[i].outcome, "user_score": user_score }
             if ending_events[i] != event_4:
                 template = JINJA_ENVIRONMENT.get_template('templates/death.html')
                 self.response.out.write(template.render(user_direction_template_vars))
@@ -129,6 +131,8 @@ class GameHandler(webapp2.RequestHandler):
                 event_list.append(event_11)
                 event_list.append(event_12)
                 event_list.append(event_13)
+                global user_score
+                user_score = 0
             else:
                 template = JINJA_ENVIRONMENT.get_template('templates/victory.html')
                 self.response.out.write(template.render(user_direction_template_vars))
@@ -143,20 +147,25 @@ class GameHandler(webapp2.RequestHandler):
                 event_list.append(event_11)
                 event_list.append(event_12)
                 event_list.append(event_13)
+                global user_score
+                user_score = 0
 
         else:
             i = random.randint(0,(len(event_list)-1))
             user_direction = self.request.get('user_direction')
             story1 = "Your choice was " + user_direction.capitalize() + ":"
+            global user_score
+            user_score += 1
+
 
             if event_list[i] == event_13:
-                user_direction_template_vars = {"direction": user_direction, "story_text": story1, "event_encounter": event_list[i].encounter, "event_outcome": event_list[i].outcome }
+                user_direction_template_vars = {"direction": user_direction, "story_text": story1, "event_encounter": event_list[i].encounter, "event_outcome": event_list[i].outcome, "user_score":user_score }
                 event_list.remove(event_list[i])
                 template = JINJA_ENVIRONMENT.get_template('templates/barricade.html')
                 self.response.out.write(template.render(user_direction_template_vars))
 
             elif event_list[i]==event_9:
-                user_direction_template_vars= {"direction": user_direction, "story_text": story1, "event_encounter": event_list[i].encounter, "event_outcome": event_list[i].outcome }
+                user_direction_template_vars= {"direction": user_direction, "story_text": story1, "event_encounter": event_list[i].encounter, "event_outcome": event_list[i].outcome, "user_score":user_score }
                 event_list.remove(event_list[i])
                 template = JINJA_ENVIRONMENT.get_template('templates/findbrother.html')
                 self.response.out.write(template.render(user_direction_template_vars))
@@ -180,7 +189,7 @@ class GameHandler(webapp2.RequestHandler):
                 self.response.out.write(template.render(user_direction_template_vars))
 
             else:
-                user_direction_template_vars = {"direction": user_direction, "story_text": story1, "event_encounter": event_list[i].encounter, "event_outcome": event_list[i].outcome }
+                user_direction_template_vars = {"direction": user_direction, "story_text": story1, "event_encounter": event_list[i].encounter, "event_outcome": event_list[i].outcome, "user_score":user_score }
                 event_list.remove(event_list[i])
                 template = JINJA_ENVIRONMENT.get_template('templates/index.html')
                 self.response.out.write(template.render(user_direction_template_vars))
@@ -199,13 +208,15 @@ class BarricadeHandler(webapp2.RequestHandler):
         #     template = JINJA_ENVIRONMENT.get_template('templates/index.html')
         #     self.response.out.write(template.render(user_direction_template_vars))
         if self.request.get('user_direction') == 'hide':
+            global user_score
+            user_score += 1
             start_text = "You chose to hide in the dumpster and, luckily, the store owner moved it to the other side of the street. You made it past the cops and into a safe alley, but you cannot stay for long. Where would you like to go from here?"
-            beginning = {"story_text": start_text}
+            beginning = {"story_text": start_text, "user_score": user_score}
             template = JINJA_ENVIRONMENT.get_template('templates/barricade_results.html')
             self.response.out.write(template.render(beginning))
         else:
             start_text = "Looks like you chose the wrong option. You are now dead. Oops..."
-            beginning = {"story_text": start_text}
+            beginning = {"story_text": start_text, "user_score": user_score}
             template = JINJA_ENVIRONMENT.get_template('templates/death.html')
             self.response.out.write(template.render(beginning))
             for event in event_list:
@@ -221,19 +232,23 @@ class BarricadeHandler(webapp2.RequestHandler):
             event_list.append(event_11)
             event_list.append(event_12)
             event_list.append(event_13)
+            global user_score
+            user_score = 0
 
 class BrotherHandler(webapp2.RequestHandler):
     def get(self):
         self.response.write('STOP TRYING TO SKIP AHEAD!!')
     def post(self):
         if self.request.get('user_direction') == 'hide':
+            global user_score
+            user_score += 1
             start_text = "You let your brother go. You may never see him again. That's pretty sad. Although, he did try to get you arrested so I guess all is fair... But the police are still looking, so you need to get moving."
-            beginning = {"story_text": start_text}
+            beginning = {"story_text": start_text, "user_score": user_score}
             template = JINJA_ENVIRONMENT.get_template('templates/brother_results.html')
             self.response.out.write(template.render(beginning))
         else:
             start_text = "Looks like you chose the wrong option. You are now dead. Oops..."
-            beginning = {"story_text": start_text}
+            beginning = {"story_text": start_text,"user_score": user_score}
             template = JINJA_ENVIRONMENT.get_template('templates/death.html')
             self.response.out.write(template.render(beginning))
             for event in event_list:
@@ -249,6 +264,8 @@ class BrotherHandler(webapp2.RequestHandler):
             event_list.append(event_11)
             event_list.append(event_12)
             event_list.append(event_13)
+            global user_score
+            user_score = 0
 
 class ExtraHandler(webapp2.RequestHandler):
     def get(self):
