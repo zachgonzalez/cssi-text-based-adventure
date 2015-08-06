@@ -199,14 +199,6 @@ class BarricadeHandler(webapp2.RequestHandler):
     def get(self):
         self.response.write('STOP TRYING TO SKIP AHEAD!!')
     def post(self):
-        # if len(event_list) == 0:
-        #     i = random.randint(0,(len(ending_events)-1))
-        #
-        #     user_direction = self.request.get('user_direction')
-        #     story1 = "This is what happens when you go " + user_direction.lower() + ":"
-        #     user_direction_template_vars = {"direction": user_direction, "story_text": story1, "event_encounter": ending_events[i].encounter, "event_outcome": ending_events[i].outcome }
-        #     template = JINJA_ENVIRONMENT.get_template('templates/index.html')
-        #     self.response.out.write(template.render(user_direction_template_vars))
         if self.request.get('user_direction') == 'hide':
             global user_score
             user_score += 1
@@ -215,7 +207,7 @@ class BarricadeHandler(webapp2.RequestHandler):
             template = JINJA_ENVIRONMENT.get_template('templates/barricade_results.html')
             self.response.out.write(template.render(beginning))
         else:
-            start_text = "Looks like you chose the wrong option. You are now dead. Oops..."
+            start_text = "The police didn't seem to like that decision..."
             beginning = {"story_text": start_text, "user_score": user_score}
             template = JINJA_ENVIRONMENT.get_template('templates/death.html')
             self.response.out.write(template.render(beginning))
@@ -247,7 +239,7 @@ class BrotherHandler(webapp2.RequestHandler):
             template = JINJA_ENVIRONMENT.get_template('templates/brother_results.html')
             self.response.out.write(template.render(beginning))
         else:
-            start_text = "Looks like you chose the wrong option. You are now dead. Oops..."
+            start_text = "Your brother was the football captain. Did you really think it would be that easy?"
             beginning = {"story_text": start_text,"user_score": user_score}
             template = JINJA_ENVIRONMENT.get_template('templates/death.html')
             self.response.out.write(template.render(beginning))
