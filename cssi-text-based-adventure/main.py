@@ -82,9 +82,13 @@ class MainHandler(webapp2.RequestHandler):
       def get(self):
         user = users.get_current_user()
         if user:
-            game_user = UserModel(currentUser = user.user_id(), score = 0)
-            # game_user.put()
-            username = user.nickname()
+            if UserModel.query(UserModel.currentUser==users.get_current_user().user_id()).fetch():
+                pass
+            else:
+                game_user = UserModel(currentUser = user.user_id(), score = 0)
+                game_user.put()
+                username = user.nickname()
+
             signoutlink = users.create_logout_url('/')
             signout = ('(<a href="%s">sign out</a>)' %(signoutlink))
             #Damerrick's additional code. Needed?
