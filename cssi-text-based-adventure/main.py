@@ -473,21 +473,13 @@ class DrugsHandler(webapp2.RequestHandler):
             user_score=user.score #assigning user_score to the actual to the variable that gets passed through our templates
             user.put()
             start_text = "Your high school DARE program taught you well. #HugsNotDrugs"
-<<<<<<< HEAD
             beginning = {"story_text": start_text, "user_score":user_score}
-=======
-            beginning = {"story_text": start_text, "user_score": user_score}
->>>>>>> 0c75d080ad094eda3a1072aa449760c99e668314
             template = JINJA_ENVIRONMENT.get_template('templates/drugs_results.html')
             self.response.out.write(template.render(beginning))
         else:
             global user_score
             start_text = "That's what you get for buying drugs off the streets dude.."
-<<<<<<< HEAD
             beginning = {"story_text": start_text, "user_score":user_score}
-=======
-            beginning = {"story_text": start_text, "user_score": user_score}
->>>>>>> 0c75d080ad094eda3a1072aa449760c99e668314
             template = JINJA_ENVIRONMENT.get_template('templates/death.html')
             self.response.out.write(template.render(beginning))
             for event in event_list:
