@@ -3,13 +3,10 @@
 
 h1 {
   font-family: 'Rock Salt', cursive;
-  left: 50%;
+  text-align: center;
 
   }
-#gamebox {
-  margin-left: 25%;
-  margin-right: 25%;
-}
+
 #direction {
   text-transform: uppercase;
 }
