@@ -190,7 +190,7 @@ class GameHandler(webapp2.RequestHandler):
                 self.response.out.write(template.render(user_direction_template_vars))
 
             elif event_list[i]==event_15:
-                user_direction_template_vars= {"direction": user_direction, "story_text": story1, "event_encounter": event_list[i].encounter, "event_outcome": event_list[i].outcome }
+                user_direction_template_vars= {"direction": user_direction, "story_text": story1, "event_encounter": event_list[i].encounter, "event_outcome": event_list[i].outcome, "user_score":user_score }
                 event_list.remove(event_list[i])
                 template = JINJA_ENVIRONMENT.get_template('templates/drugs.html')
                 self.response.out.write(template.render(user_direction_template_vars))
@@ -379,12 +379,12 @@ class DrugsHandler(webapp2.RequestHandler):
     def post(self):
         if self.request.get('user_direction') == 'no':
             start_text = "Your high school DARE program taught you well. #HugsNotDrugs"
-            beginning = {"story_text": start_text}
+            beginning = {"story_text": start_text, "user_score": user_score}
             template = JINJA_ENVIRONMENT.get_template('templates/drugs_results.html')
             self.response.out.write(template.render(beginning))
         else:
             start_text = "That's what you get for buying drugs off the streets dude.."
-            beginning = {"story_text": start_text}
+            beginning = {"story_text": start_text, "user_score": user_score}
             template = JINJA_ENVIRONMENT.get_template('templates/death.html')
             self.response.out.write(template.render(beginning))
             for event in event_list:
