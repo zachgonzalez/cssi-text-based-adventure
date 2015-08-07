@@ -101,6 +101,13 @@ class MainHandler(webapp2.RequestHandler):
 class GameHandler(webapp2.RequestHandler):
 
     def get(self):
+        current_user = UserModel.query(UserModel.currentUser==users.get_current_user().user_id()).fetch()[0]
+        current_user_id = current_user.key.id()
+        current_user_key=ndb.Key(UserModel, int(current_user_id))
+        user = current_user_key.get()
+        user.score = 0
+        user_score=user.score #assigning user_score to the actual to the variable that gets passed through our templates
+        user.put()
         start_text = "Your identical twin has set you up. He told you to meet him downtown at the Board of Trade building, and as you are arriving you realize that he has robbed the commissioners and is using you as a doppelganger. You don't realize this until you see the news in a store window nearby announcing the breaking news. Miraculously, you realize that you haven't been caught yet because the police think that the twin is still in the building and that he is wearing all black, but you are about a block away and wearing pastel colors. You have to get away from the scene quickly or you will have to pay a pretty bad price. Without a second thought, you decide you should run somewhere. To the north is Madison Street, to the west is a deserted alley, to the east is Wacker Drive, and to the south is Monroe Street."
         beginning = {"story_text": start_text, "user_score": user_score}
         template = JINJA_ENVIRONMENT.get_template('templates/index.html')
