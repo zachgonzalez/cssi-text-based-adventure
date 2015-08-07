@@ -19,11 +19,11 @@
       <input type="radio" name="user_direction" value="West" required>West   <br>
       </div>
       <input type="submit" value="Take me this way!"></input>
-    </center></form>
+        <div id="score_counter">
+        <p> Score: {{user_score}} </p>
+      </div></form>    </center>
   </div>
-  <div id="score_counter">
-    <p> Score: {{user_score}} </p>
-  </div>
+
   <!-- <p> You went <span style="text-transform: uppercase">{{direction}}</span></p> -->
   </body>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>

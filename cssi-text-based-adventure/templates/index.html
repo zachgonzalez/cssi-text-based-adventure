@@ -9,7 +9,7 @@
     <h1>It's The Game of Life.</h1>
 
    <div>
-      <center><form id="gamebox" method="post" action="/game" style="width: 500px" >{{story_text}} {{event_encounter}} {{event_outcome}}
+      <form id="gamebox" method="post" action="/game" style="width: 500px" >{{story_text}} {{event_encounter}} {{event_outcome}}
           <br>
           <span id="picofstart"><img src="http://i.huffpost.com/gen/1941141/images/o-CHICAGO-SHOOTING-facebook.jpg" height="400px" width=90%></img></span>
           <center>Which direction would you like to go?<br>
@@ -20,10 +20,11 @@
               <input type="radio" name="user_direction" value="West" required>West<br>
             </div><br>
             <input type="submit" value="Take me this way!"></input>
-            <br><br>        <div id='score_counter'>
-                      <p> Score: {{user_score}} </p>
-                    </div>
-        </form></center>
+            <br><br>
+        </form>
+        <div id='score_counter'>
+                  <p> Score: {{user_score}} </p>
+        </div>
 
     </div>
 
