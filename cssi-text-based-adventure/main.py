@@ -18,6 +18,7 @@
 import webapp2
 import jinja2
 import os
+import logging
 from google.appengine.ext import ndb
 
 
@@ -33,6 +34,7 @@ JINJA_ENVIRONMENT = jinja2.Environment(
 class UserModel(ndb.Model):
     currentUser = ndb.StringProperty(required= True)
     text = ndb.TextProperty()
+    score = ndb.IntegerProperty()
 
 class Events(ndb.Model):
     encounter = ndb.StringProperty()
@@ -74,15 +76,14 @@ event_list = [event_1,
               ]
 
 ending_events = [event_4, event_5]
-
-user_score = 0
-
-
+user_score= 0
 
 class MainHandler(webapp2.RequestHandler):
       def get(self):
         user = users.get_current_user()
         if user:
+            game_user = UserModel(currentUser = user.user_id(), score = 0)
+            # game_user.put()
             username = user.nickname()
             signoutlink = users.create_logout_url('/')
             signout = ('(<a href="%s">sign out</a>)' %(signoutlink))
@@ -91,11 +92,11 @@ class MainHandler(webapp2.RequestHandler):
             start= {"username": user.nickname(), "signoutlink": users.create_logout_url('/'),
             "greeting2":'Welcome!', "state_user": "Your username is: "}
             self.response.out.write(home_page.render(start))
-            #End of additional code.
+
         else:
             greeting = ('<a href="%s">Sign in or register</a>.' %(users.create_login_url('/')))
-
             self.response.out.write('<html><body>%s</body></html>' %(greeting))
+
 
 class GameHandler(webapp2.RequestHandler):
 
@@ -106,6 +107,13 @@ class GameHandler(webapp2.RequestHandler):
         self.response.out.write(template.render(beginning))
 
     def post(self):
+        # current_user = UserModel.query(UserModel.currentUser==users.get_current_user().user_id()).fetch()[0]
+        # current_user_id = current_user.key.id()
+        # current_user_key=ndb.Key(UserModel, int(current_user_id))
+        # user = current_user_key.get()
+        # user.score = 0
+        # user_score=user.score #assigning user_score to the actual to the variable that gets passed through our templates
+        # user.put()
 
         if len(event_list) == 0:
             i = random.randint(0,(len(ending_events)-1))
@@ -129,8 +137,13 @@ class GameHandler(webapp2.RequestHandler):
                 event_list.append(event_13)
                 event_list.append(event_14)
                 event_list.append(event_15)
-                global user_score
-                user_score = 0
+                current_user = UserModel.query(UserModel.currentUser==users.get_current_user().user_id()).fetch()[0]
+                current_user_id = current_user.key.id()
+                current_user_key=ndb.Key(UserModel, int(current_user_id))
+                user = current_user_key.get()
+                user.score = 0
+                user_score=user.score #assigning user_score to the actual to the variable that gets passed through our templates
+                user.put()
             else:
                 template = JINJA_ENVIRONMENT.get_template('templates/victory.html')
                 self.response.out.write(template.render(user_direction_template_vars))
@@ -147,15 +160,34 @@ class GameHandler(webapp2.RequestHandler):
                 event_list.append(event_13)
                 event_list.append(event_14)
                 event_list.append(event_15)
-                global user_score
-                user_score = 0
+                current_user = UserModel.query(UserModel.currentUser==users.get_current_user().user_id()).fetch()[0]
+                current_user_id = current_user.key.id()
+                current_user_key=ndb.Key(UserModel, int(current_user_id))
+                user = current_user_key.get()
+                user.score = 0
+                user_score=user.score #assigning user_score to the actual to the variable that gets passed through our templates
+                user.put()
 
         else:
             i = random.randint(0,(len(event_list)-1))
             user_direction = self.request.get('user_direction')
             story1 = "Your choice was " + user_direction.capitalize() + ":"
             global user_score
-            user_score += 1
+            current_user = UserModel.query(UserModel.currentUser==users.get_current_user().user_id()).fetch()[0]
+            current_user_id = current_user.key.id()
+            current_user_key=ndb.Key(UserModel, int(current_user_id))
+            user = current_user_key.get()
+            user.score = user.score + 1
+            user_score=user.score #assigning user_score to the actual to the variable that gets passed through our templates
+            user.put()
+            # current_user_key=ndb.Key(UserModel, int(users.get_current_user().user_id()))
+
+
+
+
+
+
+
 
 
 
@@ -200,20 +232,26 @@ class GameHandler(webapp2.RequestHandler):
                 event_list.remove(event_list[i])
                 template = JINJA_ENVIRONMENT.get_template('templates/index.html')
                 self.response.out.write(template.render(user_direction_template_vars))
-                # self.response.out.write("You went: " + user_input_loc)
+                #self.response.out.write("You went: " + user_input_loc)
 
 class BarricadeHandler(webapp2.RequestHandler):
     def get(self):
         self.response.write('STOP TRYING TO SKIP AHEAD!!')
     def post(self):
         if self.request.get('user_direction') == 'hide':
-            global user_score
-            user_score += 1
+            current_user = UserModel.query(UserModel.currentUser==users.get_current_user().user_id()).fetch()[0]
+            current_user_id = current_user.key.id()
+            current_user_key=ndb.Key(UserModel, int(current_user_id))
+            user = current_user_key.get()
+            user.score = user.score + 1
+            user_score=user.score #assigning user_score to the actual to the variable that gets passed through our templates
+            user.put()
             start_text = "You chose to hide in the dumpster and, luckily, the store owner moved it to the other side of the street. You made it past the cops and into a safe alley, but you cannot stay for long. Where would you like to go from here?"
             beginning = {"story_text": start_text, "user_score": user_score}
             template = JINJA_ENVIRONMENT.get_template('templates/barricade_results.html')
             self.response.out.write(template.render(beginning))
         else:
+            global user_score
             start_text = "The police didn't seem to like that decision..."
             beginning = {"story_text": start_text, "user_score": user_score}
             template = JINJA_ENVIRONMENT.get_template('templates/death.html')
@@ -233,21 +271,32 @@ class BarricadeHandler(webapp2.RequestHandler):
             event_list.append(event_13)
             event_list.append(event_14)
             event_list.append(event_15)
-            global user_score
-            user_score = 0
+            current_user = UserModel.query(UserModel.currentUser==users.get_current_user().user_id()).fetch()[0]
+            current_user_id = current_user.key.id()
+            current_user_key=ndb.Key(UserModel, int(current_user_id))
+            user = current_user_key.get()
+            user.score = 0
+            user_score=user.score #assigning user_score to the actual to the variable that gets passed through our templates
+            user.put()
 
 class BrotherHandler(webapp2.RequestHandler):
     def get(self):
         self.response.write('STOP TRYING TO SKIP AHEAD!!')
     def post(self):
         if self.request.get('user_direction') == 'hide':
-            global user_score
-            user_score += 1
+            current_user = UserModel.query(UserModel.currentUser==users.get_current_user().user_id()).fetch()[0]
+            current_user_id = current_user.key.id()
+            current_user_key=ndb.Key(UserModel, int(current_user_id))
+            user = current_user_key.get()
+            user.score = user.score + 1
+            user_score=user.score #assigning user_score to the actual to the variable that gets passed through our templates
+            user.put()
             start_text = "You let your brother go. You may never see him again. That's pretty sad. Although, he did try to get you arrested so I guess all is fair... But the police are still looking, so you need to get moving."
             beginning = {"story_text": start_text, "user_score": user_score}
             template = JINJA_ENVIRONMENT.get_template('templates/brother_results.html')
             self.response.out.write(template.render(beginning))
         else:
+            global user_score
             start_text = "Your brother was the football captain. Did you really think it would be that easy?"
             beginning = {"story_text": start_text,"user_score": user_score}
             template = JINJA_ENVIRONMENT.get_template('templates/death.html')
@@ -267,21 +316,32 @@ class BrotherHandler(webapp2.RequestHandler):
             event_list.append(event_13)
             event_list.append(event_14)
             event_list.append(event_15)
-            global user_score
-            user_score = 0
+            current_user = UserModel.query(UserModel.currentUser==users.get_current_user().user_id()).fetch()[0]
+            current_user_id = current_user.key.id()
+            current_user_key=ndb.Key(UserModel, int(current_user_id))
+            user = current_user_key.get()
+            user.score = 0
+            user_score=user.score #assigning user_score to the actual to the variable that gets passed through our templates
+            user.put()
 
 class ExtraHandler(webapp2.RequestHandler):
     def get(self):
         self.response.write('STOP TRYING TO SKIP AHEAD!!')
     def post(self):
         if self.request.get('user_direction') == 'extra':
-            global user_score
-            user_score += 1
+            current_user = UserModel.query(UserModel.currentUser==users.get_current_user().user_id()).fetch()[0]
+            current_user_id = current_user.key.id()
+            current_user_key=ndb.Key(UserModel, int(current_user_id))
+            user = current_user_key.get()
+            user.score = user.score + 1
+            user_score=user.score #assigning user_score to the actual to the variable that gets passed through our templates
+            user.put()
             start_text = "You decide to become an extra. Your decision pays off as you blend right in with the crowd. There are no cops around currently, but the shoot is wrapping up, so you will have to keep moving."
             beginning = {"story_text": start_text, "user_score":user_score}
             template = JINJA_ENVIRONMENT.get_template('templates/extra_results.html')
             self.response.out.write(template.render(beginning))
         else:
+            global user_score
             start_text = "You could have just been an extra... Now look what you have done."
             beginning = {"story_text": start_text, "user_score":user_score}
             template = JINJA_ENVIRONMENT.get_template('templates/death.html')
@@ -301,21 +361,32 @@ class ExtraHandler(webapp2.RequestHandler):
             event_list.append(event_13)
             event_list.append(event_14)
             event_list.append(event_15)
-            global user_score
-            user_score = 0
+            current_user = UserModel.query(UserModel.currentUser==users.get_current_user().user_id()).fetch()[0]
+            current_user_id = current_user.key.id()
+            current_user_key=ndb.Key(UserModel, int(current_user_id))
+            user = current_user_key.get()
+            user.score = 0
+            user_score=user.score #assigning user_score to the actual to the variable that gets passed through our templates
+            user.put()
 
 class ClothesHandler(webapp2.RequestHandler):
     def get(self):
         self.response.write('STOP TRYING TO SKIP AHEAD!!')
     def post(self):
         if self.request.get('user_direction') == 'trade':
-            global user_score
-            user_score += 1
+            current_user = UserModel.query(UserModel.currentUser==users.get_current_user().user_id()).fetch()[0]
+            current_user_id = current_user.key.id()
+            current_user_key=ndb.Key(UserModel, int(current_user_id))
+            user = current_user_key.get()
+            user.score = user.score + 1
+            user_score=user.score #assigning user_score to the actual to the variable that gets passed through our templates
+            user.put()
             start_text = "You see a young man about your size and run up to him. He is so excited to wear your gross clothes and rambles on for ten minutes about how you\'re helping him embrace his artsy side. Finally you manage to end the conversation. The cops could be anywhere though. Where next?"
             beginning = {"story_text": start_text, "user_score":user_score}
             template = JINJA_ENVIRONMENT.get_template('templates/clothes_results.html')
             self.response.out.write(template.render(beginning))
         else:
+            global user_score
             start_text = "Clothes are important I guess..."
             beginning = {"story_text": start_text, "user_score":user_score}
             template = JINJA_ENVIRONMENT.get_template('templates/death.html')
@@ -335,21 +406,32 @@ class ClothesHandler(webapp2.RequestHandler):
             event_list.append(event_13)
             event_list.append(event_14)
             event_list.append(event_15)
-            global user_score
-            user_score = 0
+            current_user = UserModel.query(UserModel.currentUser==users.get_current_user().user_id()).fetch()[0]
+            current_user_id = current_user.key.id()
+            current_user_key=ndb.Key(UserModel, int(current_user_id))
+            user = current_user_key.get()
+            user.score = 0
+            user_score=user.score #assigning user_score to the actual to the variable that gets passed through our templates
+            user.put()
 
 class OldwomanHandler(webapp2.RequestHandler):
     def get(self):
         self.response.write('STOP TRYING TO SKIP AHEAD!!')
     def post(self):
         if self.request.get('user_direction') == 'no':
-            global user_score
-            user_score += 1
+            current_user = UserModel.query(UserModel.currentUser==users.get_current_user().user_id()).fetch()[0]
+            current_user_id = current_user.key.id()
+            current_user_key=ndb.Key(UserModel, int(current_user_id))
+            user = current_user_key.get()
+            user.score = user.score + 1
+            user_score=user.score #assigning user_score to the actual to the variable that gets passed through our templates
+            user.put()
             start_text = "You keep moving. Your life is way more important then helping some old hag."
             beginning = {"story_text": start_text, "user_score":user_score}
             template = JINJA_ENVIRONMENT.get_template('templates/oldwoman_results.html')
             self.response.out.write(template.render(beginning))
         else:
+            global user_score
             start_text = "Why would anyone ever help the elderly.."
             beginning = {"story_text": start_text, "user_score":user_score}
             template = JINJA_ENVIRONMENT.get_template('templates/death.html')
@@ -369,8 +451,13 @@ class OldwomanHandler(webapp2.RequestHandler):
             event_list.append(event_13)
             event_list.append(event_14)
             event_list.append(event_15)
-            global user_score
-            user_score = 0
+            current_user = UserModel.query(UserModel.currentUser==users.get_current_user().user_id()).fetch()[0]
+            current_user_id = current_user.key.id()
+            current_user_key=ndb.Key(UserModel, int(current_user_id))
+            user = current_user_key.get()
+            user.score = 0
+            user_score=user.score #assigning user_score to the actual to the variable that gets passed through our templates
+            user.put()
 
 
 class DrugsHandler(webapp2.RequestHandler):
@@ -378,13 +465,21 @@ class DrugsHandler(webapp2.RequestHandler):
         self.response.write('STOP TRYING TO SKIP AHEAD!!')
     def post(self):
         if self.request.get('user_direction') == 'no':
+            current_user = UserModel.query(UserModel.currentUser==users.get_current_user().user_id()).fetch()[0]
+            current_user_id = current_user.key.id()
+            current_user_key=ndb.Key(UserModel, int(current_user_id))
+            user = current_user_key.get()
+            user.score = user.score + 1
+            user_score=user.score #assigning user_score to the actual to the variable that gets passed through our templates
+            user.put()
             start_text = "Your high school DARE program taught you well. #HugsNotDrugs"
-            beginning = {"story_text": start_text}
+            beginning = {"story_text": start_text, "user_score":user_score}
             template = JINJA_ENVIRONMENT.get_template('templates/drugs_results.html')
             self.response.out.write(template.render(beginning))
         else:
+            global user_score
             start_text = "That's what you get for buying drugs off the streets dude.."
-            beginning = {"story_text": start_text}
+            beginning = {"story_text": start_text, "user_score":user_score}
             template = JINJA_ENVIRONMENT.get_template('templates/death.html')
             self.response.out.write(template.render(beginning))
             for event in event_list:
@@ -402,8 +497,13 @@ class DrugsHandler(webapp2.RequestHandler):
             event_list.append(event_13)
             event_list.append(event_14)
             event_list.append(event_15)
-            global user_score
-            user_score = 0
+            current_user = UserModel.query(UserModel.currentUser==users.get_current_user().user_id()).fetch()[0]
+            current_user_id = current_user.key.id()
+            current_user_key=ndb.Key(UserModel, int(current_user_id))
+            user = current_user_key.get()
+            user.score = 0
+            user_score=user.score #assigning user_score to the actual to the variable that gets passed through our templates
+            user.put()
 
 
 class DeathHandler(webapp2.RequestHandler):
